@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koo Fruit Engine — User Manual</title>
+<style>
+:root {
+    --fg: #1a1a1a;
+    --bg: #ffffff;
+    --muted: #555;
+    --accent: #d4820a;
+    --code-bg: #f4f2ed;
+    --border: #ddd;
+}
+* { box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+                 "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--fg);
+    background: var(--bg);
+    max-width: 860px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem 4rem;
+}
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.8em; }
+h1 { font-size: 2.1em; border-bottom: 3px solid var(--accent); padding-bottom: 0.3em; }
+h2 { font-size: 1.55em; border-bottom: 1px solid var(--border); padding-bottom: 0.25em; margin-top: 2.2em; }
+h3 { font-size: 1.2em; color: var(--muted); }
+h4 { font-size: 1.05em; color: var(--muted); }
+p { margin: 0.8em 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code {
+    font-family: "SF Mono", Menlo, Consolas, "Courier New", monospace;
+    font-size: 0.92em;
+    background: var(--code-bg);
+    padding: 0.12em 0.35em;
+    border-radius: 3px;
+}
+pre {
+    background: var(--code-bg);
+    padding: 0.9em 1.1em;
+    border-radius: 5px;
+    overflow-x: auto;
+    border-left: 3px solid var(--accent);
+}
+pre code { background: none; padding: 0; }
+blockquote {
+    border-left: 4px solid var(--accent);
+    padding: 0.2em 1.1em;
+    margin: 1em 0;
+    color: var(--muted);
+    background: #fafaf6;
+    border-radius: 0 4px 4px 0;
+}
+table {
+    border-collapse: collapse;
+    margin: 1em 0;
+    width: 100%;
+    font-size: 0.96em;
+}
+th, td {
+    border: 1px solid var(--border);
+    padding: 0.5em 0.8em;
+    text-align: left;
+    vertical-align: top;
+}
+th { background: #f7f3eb; font-weight: 600; }
+tr:nth-child(even) td { background: #fafaf8; }
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1em auto;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+ol, ul { padding-left: 1.5em; }
+li { margin: 0.3em 0; }
+.toc { background: #f7f3eb; padding: 0.8em 1.2em; border-radius: 5px; margin: 1.5em 0; }
+.toc ol { margin: 0.3em 0; padding-left: 1.2em; }
+@media print {
+    body { max-width: none; margin: 0; padding: 1.2cm; font-size: 11pt; }
+    h1 { page-break-before: avoid; }
+    h2 { page-break-before: page; page-break-after: avoid; }
+    h2:first-of-type { page-break-before: avoid; }
+    h3, h4 { page-break-after: avoid; }
+    img { page-break-inside: avoid; max-width: 95%; }
+    pre, table { page-break-inside: avoid; }
+    a { color: var(--fg); text-decoration: none; }
+}
+</style>
+</head>
+<body>
+<h1 id="koo-fruit-engine-user-manual">Koo Fruit Engine — User Manual</h1>
+<blockquote>
+<p><strong>Version 1.4.0</strong> — Photo → 3D realistic banana with curl animation.
+A Blender 4.2+ extension by kaiser390.</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of contents</h2>
+<ol>
+<li><a href="#1-installation">Installation</a></li>
+<li><a href="#2-quick-start--60-seconds">Quick start — 60 seconds</a></li>
+<li><a href="#3-interface-overview">Interface overview</a></li>
+<li><a href="#4-realistic-workflow--from-photo">Realistic workflow — from photo</a></li>
+<li><a href="#5-stylized-workflow--from-sliders">Stylized workflow — from sliders</a></li>
+<li><a href="#6-peeling-the-banana">Peeling the banana</a></li>
+<li><a href="#7-peel-animation">Peel animation</a></li>
+<li><a href="#8-deform--reshape-an-existing-banana">Deform — reshape an existing banana</a></li>
+<li><a href="#9-diorama--multiple-bananas-in-one-scene">Diorama — multiple bananas in one scene</a></li>
+<li><a href="#10-presets--save-and-load-your-bananas">Presets — save and load your bananas</a></li>
+<li><a href="#11-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
+<li><a href="#12-advanced--json-editable-parameters">Advanced — JSON-editable parameters</a></li>
+</ol>
+<hr />
+<h2 id="1-installation">1. Installation</h2>
+<ol>
+<li>Download <code>koo_fruit_engine-1.4.0.zip</code>.</li>
+<li>Blender → <strong>Edit → Preferences → Get Extensions</strong> (or <strong>Add-ons</strong> tab).</li>
+<li>Top-right <strong>↓ Install from Disk</strong>, pick the ZIP.</li>
+<li>Enable the checkbox next to "Koo Fruit Engine".</li>
+<li>Open the N-panel in a 3D viewport (press <code>N</code>), look for the <strong>Koo Fruit</strong> tab on the right edge.</li>
+</ol>
+<p><img alt="Installing the extension" src="img/manual/01_install.png" /></p>
+<hr />
+<h2 id="2-quick-start-60-seconds">2. Quick start — 60 seconds</h2>
+<ol>
+<li>N-panel → <strong>Quality / Preset</strong> → dropdown → pick <code>★ 🎲 cavendish</code> → <strong>Load</strong>.</li>
+<li>Make sure the <strong>Realistic / Stylized</strong> tab is on <strong>🎲 Stylized</strong> (next to the preset dropdown).</li>
+<li>Scroll down → <strong>Generate</strong> box → click <strong>✨ Generate Stylized</strong>.</li>
+<li>Numpad <code>1</code> to face the banana, <code>Z</code> to toggle material preview.</li>
+</ol>
+<p>You now have a ripe Cavendish banana. Continue reading for how to feed it a photo, peel it, or animate it.</p>
+<p><img alt="60-second result" src="img/manual/02_quickstart_result.png" /></p>
+<hr />
+<h2 id="3-interface-overview">3. Interface overview</h2>
+<p>The entire addon lives in one N-panel section (<code>N → Koo Fruit</code>).
+Top-to-bottom:</p>
+<table>
+<thead>
+<tr>
+<th>Block</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fruit Type</strong></td>
+<td>Which fruit recipe to use (Banana now; Apple / Pepper / Flower will auto-register as they're added).</td>
+</tr>
+<tr>
+<td><strong>Quality / Preset</strong></td>
+<td>Mesh density (LOW / HIGH) and preset dropdown with Load / Save / Save as…</td>
+</tr>
+<tr>
+<td><strong>📷 Realistic | 🎲 Stylized</strong></td>
+<td>Workflow tabs — switch input mode</td>
+</tr>
+<tr>
+<td><strong>Image Source</strong> / <strong>Shape+Color</strong></td>
+<td>Tab-dependent: photo + markers (Realistic) OR slider stack (Stylized)</td>
+</tr>
+<tr>
+<td><strong>Generate</strong></td>
+<td>The build button. Plus 📌 Pin and debug helpers.</td>
+</tr>
+<tr>
+<td><strong>Deform</strong> <em>(Realistic only)</em></td>
+<td>Reshape markers: length × / radius × / curvature Δ</td>
+</tr>
+<tr>
+<td><strong>Peel</strong></td>
+<td>Open the peel, slide strip amounts + curl</td>
+</tr>
+<tr>
+<td><strong>Animation</strong></td>
+<td>Keyframe the waterfall-close peel animation</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="N-panel overview — Realistic tab" src="img/manual/03_panel_realistic.png" /></p>
+<p><img alt="N-panel overview — Stylized tab" src="img/manual/04_panel_stylized.png" /></p>
+<hr />
+<h2 id="4-realistic-workflow-from-photo">4. Realistic workflow — from photo</h2>
+<p>Produce a banana that matches a photograph pixel-for-pixel.</p>
+<h3 id="41-load-the-photo">4.1 Load the photo</h3>
+<p>N-panel → <strong>Image Source</strong> → click the <strong>photo path field</strong> → pick your image.
+An Image Editor opens automatically with the photo and <strong>48 silhouette markers + 10 control markers</strong> placed in an ellipse around it. For small or simple shapes, drop <strong>Silhouette Markers</strong> down to 12–16 before loading.</p>
+<p><img alt="Photo loaded with default markers" src="img/manual/05_photo_loaded.png" /></p>
+<h3 id="42-trace-the-silhouette">4.2 Trace the silhouette</h3>
+<p>Two options — pick whichever snaps to your photo better:</p>
+<ul>
+<li><strong>🎯 Auto-trace Contour</strong> — detects the fruit edge automatically.
+  Works best on clean photos (matte background, decent contrast).
+  The <strong>Strategy</strong> dropdown picks the detection algorithm:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ARCHETYPE</code></td>
+<td>Clean photos — PCA + bin extrema, filters watermarks/shadows</td>
+</tr>
+<tr>
+<td><code>ARCHETYPE_SNAP</code></td>
+<td>Default. Archetype + gradient edge snap</td>
+</tr>
+<tr>
+<td><code>HYBRID</code></td>
+<td>Saturation mask + edge snap — more detail but noise-prone</td>
+</tr>
+<tr>
+<td><code>SATURATION</code></td>
+<td>Fastest, lowest accuracy. Debugging baseline</td>
+</tr>
+<tr>
+<td><code>GRADIENT_ONLY</code></td>
+<td>Matte fruit on noisy background — saturation seed + aggressive gradient pull</td>
+</tr>
+</tbody>
+</table>
+<p>Leave <strong>Edge snap</strong> at 30 px for most photos; raise when the auto-trace starts far from the true edge.</p>
+<p><img alt="Auto-trace result" src="img/manual/06_autotrace_result.png" /></p>
+<ul>
+<li><strong>✏️ Manual Shape Trace</strong> — modal click-to-aim editor. Left-click a marker to select, click again to move it. <code>Enter</code> to exit.
+  Use this to nudge markers that auto-trace placed wrong, or to trace from scratch on tricky photos.</li>
+</ul>
+<p><img alt="Manual shape trace" src="img/manual/07_manual_trace.png" /></p>
+<h3 id="43-confirm-the-markers">4.3 Confirm the markers</h3>
+<p>Once the silhouette matches the banana, click <strong>✅ Confirm</strong>.
+The button turns red with <code>*</code> whenever markers have moved without a fresh Confirm — that's your "pending" signal.</p>
+<h3 id="44-pick-the-skin-mode">4.4 Pick the skin mode</h3>
+<p><strong>Skin</strong> dropdown in the Image Source block:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STRIP</code></td>
+<td>1D saturation-weighted colour strip wrapped around the banana. Photo-accurate pigment, but photo shadows/highlights are discarded — Blender's own lighting re-shades the mesh. Recommended for stock photos with obvious studio lighting.</td>
+</tr>
+<tr>
+<td><code>FULL</code></td>
+<td>Planar-XZ UV maps every pixel of the photo onto the mesh. The banana looks <strong>exactly like the photo</strong> from the matching camera angle. Use for 1:1 reproduction; every pixel — including the photo's own lighting — prints onto the surface.</td>
+</tr>
+<tr>
+<td><code>AURORA</code></td>
+<td>Emission material driven by surface normals. Rainbow gradient — great for "banana lamp" or curvature visualisations. No photo needed.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="45-generate">4.5 Generate</h3>
+<p>N-panel → <strong>Generate</strong> box → <strong>✨ Generate Realistic Banana</strong>.</p>
+<p>Blender thinks for a few seconds (LOW quality: ~4 s, HIGH quality: ~12 s) and your banana appears at the origin. Numpad <code>1</code> to align with the photo view.</p>
+<p><img alt="Realistic banana generated" src="img/manual/08_realistic_generated.png" /></p>
+<h3 id="46-iterate">4.6 Iterate</h3>
+<p>Any time you drag a marker or change the skin mode, click <strong>Generate</strong> again. The addon clears the previous <code>banana.*</code> objects and builds fresh.</p>
+<hr />
+<h2 id="5-stylized-workflow-from-sliders">5. Stylized workflow — from sliders</h2>
+<p>No photo, no markers — pure parametric. Use when you want a clean banana of a particular cultivar, variations via randomize, or preset-driven default bananas.</p>
+<h3 id="51-tab-preset">5.1 Tab + preset</h3>
+<p>Switch to the <strong>🎲 Stylized</strong> tab.
+<strong>Quality / Preset</strong> dropdown → pick any <code>🎲</code> preset (Cavendish, Blue Java, Gros Michel, Lady Finger, Manzano, Plantain, Red Banana, Burro) → <strong>Load</strong>.</p>
+<p><img alt="Stylized tab with preset loaded" src="img/manual/09_stylized_preset.png" /></p>
+<h3 id="52-hero-sliders-always-visible">5.2 Hero sliders (always visible)</h3>
+<p>Shape: <strong>Length / Radius / Curvature / Bulge / Taper Asym / Depth Ratio</strong></p>
+<p>Color: <strong>Ripeness</strong> (0 green → 0.5 yellow → 1 brown-spotted), <strong>Override raw colors</strong> toggle.</p>
+<h3 id="53-advanced-sliders">5.3 Advanced sliders</h3>
+<p>Toggle <strong>"Show advanced parameters"</strong> at the bottom of the Stylized tab to reveal:</p>
+<ul>
+<li>Shape: Shoulder sharpness (pedicel / blossom), Belly eccentricity, Ovality</li>
+<li>Color: Saturation scale, Spot density</li>
+<li>Peel Geometry: Thickness, Suture Ridge</li>
+<li>Anatomy: Show Interior / Pulp / Membrane toggles, Bundle Count, Bundle Thickness ×</li>
+<li>Surface: Peel Roughness</li>
+</ul>
+<p><img alt="Advanced sliders expanded" src="img/manual/10_stylized_advanced.png" /></p>
+<p>Everything else in the JSON schema (~40 more parameters — tube radii, honey bezier controls, per-primitive roughness, SSS settings) stays file-editable. See <a href="#12-advanced--json-editable-parameters">§12 Advanced — JSON-editable parameters</a>.</p>
+<h3 id="54-generate-randomize">5.4 Generate + Randomize</h3>
+<p><strong>✨ Generate Stylized</strong> — builds the banana from current sliders.
+<strong>🎲 Randomize</strong> — rolls the hero sliders to plausible-banana values. Doesn't auto-generate — inspect first, then Generate.</p>
+<p><img alt="Randomize variations" src="img/manual/11_randomize.png" /></p>
+<hr />
+<h2 id="6-peeling-the-banana">6. Peeling the banana</h2>
+<p>The <strong>Peel</strong> block appears after Generate. Works in both tabs.</p>
+<h3 id="61-basic-peel-open">6.1 Basic — Peel Open</h3>
+<p>Toggle <strong>Peel Open</strong> to enable peel interaction. Three strip sliders appear:</p>
+<table>
+<thead>
+<tr>
+<th>Slider</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strip 1 / 2 / 3 Amount</td>
+<td>How far each of the three peel strips is pulled back (0 = closed, 1 = fully peeled to the stem anchor)</td>
+</tr>
+<tr>
+<td>Curl</td>
+<td>Per-strip curl amount — controls how tightly the peeled strip rolls up</td>
+</tr>
+<tr>
+<td>Fiber cling</td>
+<td>0 = fibers curl with the peel; 1 = fibers stay on the flesh</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Peel open with strip sliders" src="img/manual/12_peel_sliders.png" /></p>
+<h3 id="62-uniform-mode">6.2 Uniform mode</h3>
+<p>Turn on <strong>Uniform strips</strong> to drive all three strips with one Amount + Curl pair. Fast way to open the whole peel symmetrically.</p>
+<h3 id="63-suture-cross-section">6.3 Suture cross-section</h3>
+<p>Only shows when the peel is open. Three knobs control the bundle pack that shows at the torn edge:</p>
+<ul>
+<li><strong>Pack</strong> (0–10): how many extra bundles go near each suture line. 0.3 default; 10 gives 11× the body bundle count clustered at the sutures.</li>
+<li><strong>Band (°)</strong>: angular half-width of the Gaussian cluster around each suture.</li>
+<li><strong>Outer Clearance</strong>: fraction of the peel-layer span reserved near the epidermis — keeps bundles from shadowing through the outer shell.</li>
+</ul>
+<p><img alt="Peeled banana with bundle-packed suture" src="img/manual/13_peel_curled_bundles.png" /></p>
+<hr />
+<h2 id="7-peel-animation">7. Peel animation</h2>
+<h3 id="71-enable">7.1 Enable</h3>
+<p><strong>Animation</strong> block → toggle <strong>Peeling Animation</strong>.</p>
+<p>Keyframes install immediately on the three strip-amount sliders and the timeline jumps to <code>[1 .. F_end]</code>.</p>
+<p><img alt="Animation panel" src="img/manual/14_animation_panel.png" /></p>
+<h3 id="72-scenario">7.2 Scenario</h3>
+<p>The built-in scenario is a cascade open + simultaneous close:</p>
+<ol>
+<li>Strip 1 opens alone, hitting 50 % at one phase_duration.</li>
+<li>At that moment Strip 2 starts; it hits 50 % one phase later.</li>
+<li>At <em>that</em> moment Strip 3 starts; it hits 50 % another phase later.</li>
+<li>All three reverse — reach 0 at the same final frame.</li>
+</ol>
+<p>Default <code>phase = 20</code>, <code>close = 20</code> → total 80 frames. Adjust the two sliders and the keyframes re-install automatically.</p>
+<p>Press <code>Spacebar</code> in the 3D viewport or the Timeline's ▶ Play to watch.</p>
+<p><img alt="Animation mid-frame" src="img/manual/15_animation_playback.png" /></p>
+<h3 id="73-disable">7.3 Disable</h3>
+<p>Turn the toggle off to remove the keyframes — sliders become static again.</p>
+<hr />
+<h2 id="8-deform-reshape-an-existing-banana">8. Deform — reshape an existing banana</h2>
+<p>Only in the <strong>Realistic</strong> tab, since it transforms markers. The sliders apply to the markers and rebuild the silhouette — so the photo UV re-projects onto the new outline, no stretch artefact.</p>
+<p><img alt="Deform block" src="img/manual/16_deform_panel.png" /></p>
+<h3 id="81-sliders">8.1 Sliders</h3>
+<table>
+<thead>
+<tr>
+<th>Slider</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Length ×</td>
+<td>Scale along the stem→stigma axis (0.5–2.0 soft range)</td>
+</tr>
+<tr>
+<td>Radius ×</td>
+<td>Scale perpendicular to the axis (same range)</td>
+</tr>
+<tr>
+<td>Curvature Δ</td>
+<td>Additional bend on top of the photo's natural curvature</td>
+</tr>
+</tbody>
+</table>
+<p>All three are <strong>relative to the original markers</strong> captured on the first Apply — sliders at <code>1 / 1 / 0</code> = no change.</p>
+<h3 id="82-apply">8.2 Apply</h3>
+<p><strong>🔄 Apply</strong> transforms markers and rebuilds. Baseline is captured automatically on the first Apply.</p>
+<p><strong>↶ Reset</strong> restores the original markers and resets the sliders.</p>
+<p><img alt="Deform before/after" src="img/manual/17_deform_result.png" /></p>
+<hr />
+<h2 id="9-diorama-multiple-bananas-in-one-scene">9. Diorama — multiple bananas in one scene</h2>
+<p>The addon builds one <strong>active</strong> banana at a time (each Generate clears the previous <code>banana.*</code> objects). To keep multiple bananas in the scene side-by-side — for a variety pack render, say — use <strong>📌 Pin Current</strong>.</p>
+<h3 id="91-workflow">9.1 Workflow</h3>
+<ol>
+<li>Generate banana #1 (any tab).</li>
+<li><strong>📌 Pin Current (diorama)</strong> in the Generate box.
+   * Every <code>banana.*</code> object is renamed to <code>banana_pinned_1.*</code>, moved into a new <code>Banana_Pinned_1</code> collection, and translated aside along +X.</li>
+<li>Change preset / sliders / photo / whatever.</li>
+<li>Generate banana #2 → appears at origin, pinned_1 still visible.</li>
+<li><strong>📌 Pin Current</strong> again → pinned_2 lands next to pinned_1.</li>
+<li>Rinse + repeat. Frame + render.</li>
+</ol>
+<p><img alt="Diorama — five pinned bananas" src="img/manual/18_diorama.png" /></p>
+<h3 id="92-caveats">9.2 Caveats</h3>
+<ul>
+<li>Pinned bananas are <strong>frozen</strong> — peel curl, deform and animation only affect the active (non-pinned) banana.</li>
+<li>If you want to edit a pinned banana later, Outliner → rename its prefix back to <code>banana.</code>. But the next Generate will clear it, so save a preset first.</li>
+</ul>
+<hr />
+<h2 id="10-presets-save-and-load-your-bananas">10. Presets — save and load your bananas</h2>
+<p><strong>Quality / Preset</strong> block at the top of the panel. Every preset is a JSON file that captures the full parameter state + (for realistic presets) the markers and photo path.</p>
+<h3 id="101-dropdown-icons">10.1 Dropdown icons</h3>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>★</code></td>
+<td>Built-in preset (locked, can't overwrite — fork via Save as…)</td>
+</tr>
+<tr>
+<td><code>🎲</code></td>
+<td>Parametric preset (Stylized-friendly)</td>
+</tr>
+<tr>
+<td><code>📷</code></td>
+<td>Has markers + photo block (Realistic-friendly)</td>
+</tr>
+</tbody>
+</table>
+<p>Built-in examples: <code>★ 🎲 cavendish</code>, <code>★ 📷 realistic_red_banana</code>.</p>
+<p><img alt="Preset dropdown" src="img/manual/19_preset_dropdown.png" /></p>
+<h3 id="102-buttons">10.2 Buttons</h3>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Load</strong></td>
+<td>Apply the selected preset to the scene</td>
+</tr>
+<tr>
+<td><strong>Save</strong></td>
+<td>Overwrite the currently selected user preset (disabled for built-ins)</td>
+</tr>
+<tr>
+<td><strong>Save as…</strong></td>
+<td>Write to a new name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="103-save-as-default-stylized-tab-only">10.3 Save as Default <em>(Stylized tab only)</em></h3>
+<p>Found at the bottom of the Stylized tab. Writes the current state to the well-known <code>user_default</code> preset slot. Reload any time via the dropdown to return to your personal default banana.</p>
+<p><img alt="Save as Default" src="img/manual/20_save_as_default.png" /></p>
+<hr />
+<h2 id="11-tips-troubleshooting">11. Tips &amp; troubleshooting</h2>
+<h3 id="the-peel-pulp-pokes-out-of-the-silhouette">The peel / pulp pokes out of the silhouette</h3>
+<p>On highly-curved bananas this can happen at the narrow stem neck. Workaround: in the Realistic tab, drag the <strong>Neck</strong> markers slightly into the body (toward the thick midpoint). That shrinks the pulp's axial range so it stays clear of the narrow region.</p>
+<h3 id="photo-looks-tiled-or-smeared-on-the-back-of-the-peel">Photo looks tiled or smeared on the back of the peel</h3>
+<p>The planar-XZ UV is mirror-symmetric about the Y axis by design — the back gets the mirrored photo. From the camera angle that shot the original photo, this is invisible. If you render from the opposite side, expect mirrored pigment.</p>
+<h3 id="markers-auto-place-back-to-the-default-ellipse-when-i-load-a-preset">Markers auto-place back to the default ellipse when I load a preset</h3>
+<p>Fixed in v1.3. If you still see it, make sure the preset was saved in v1.3+ (it'll have <code>markers_version</code> in its JSON).</p>
+<h3 id="generate-is-slow">Generate is slow</h3>
+<p>Drop <strong>Quality</strong> from <code>HIGH</code> to <code>LOW</code> — still production-grade mesh density (48 × 60 rings, 60 bundles).</p>
+<h3 id="i-want-to-change-a-parameter-thats-not-in-the-n-panel">I want to change a parameter that's not in the N-panel</h3>
+<p>See <a href="#12-advanced--json-editable-parameters">§12 Advanced — JSON-editable parameters</a>.</p>
+<h3 id="addon-didnt-install-cant-find-koo-fruit-tab">Addon didn't install / can't find Koo Fruit tab</h3>
+<p>Blender 4.2+ is required. For 4.2 LTS you may need to enable "Extensions" in Preferences first.</p>
+<hr />
+<h2 id="12-advanced-json-editable-parameters">12. Advanced — JSON-editable parameters</h2>
+<p>The N-panel exposes ~22 curated hero parameters. The JSON preset schema defines ~60+ more. To edit them:</p>
+<ul>
+<li><strong>User preset</strong>: edit <code>%APPDATA%/Blender Foundation/Blender/5.0/config/fruit_engine/presets/&lt;name&gt;.json</code>, then <code>Load</code> from the dropdown.</li>
+<li><strong>Built-in</strong>: fork via Save as… first; the built-ins stay read-only.</li>
+</ul>
+<p>Full UI-vs-JSON mapping table:
+<a href="stylized_params_advanced.md"><code>docs/stylized_params_advanced.md</code></a></p>
+<p>Each preset value corresponds to a registered parameter in
+<code>addon/koo_fruit_engine/data/parameters/banana.json</code>
+— same schema for every fruit archetype.</p>
+<hr />
+<h2 id="license-credits">License &amp; credits</h2>
+<p>GPL-3.0-or-later — © 2026 kaiser390 (kaiser390@naver.com)</p>
+<p>Built on Blender's extensions system (4.2+). Uses numpy only — no
+other runtime dependencies.</p>
+<p>Feedback, bug reports and preset contributions welcome at the
+project's repository.</p>
+</body>
+</html>
