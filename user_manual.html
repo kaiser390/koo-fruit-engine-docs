@@ -98,7 +98,7 @@ li { margin: 0.3em 0; }
 <body>
 <h1 id="koo-fruit-engine-user-manual">Koo Fruit Engine — User Manual</h1>
 <blockquote>
-<p><strong>Version 1.4.0</strong> — Photo → 3D realistic banana with curl animation.
+<p><strong>Version 1.4.2</strong> — Photo → 3D realistic banana with curl animation.
 A Blender 4.2+ extension by kaiser390.</p>
 </blockquote>
 <hr />
@@ -120,7 +120,7 @@ A Blender 4.2+ extension by kaiser390.</p>
 <hr />
 <h2 id="1-installation">1. Installation</h2>
 <ol>
-<li>Download <code>koo_fruit_engine-1.4.0.zip</code>.</li>
+<li>Download <code>koo_fruit_engine-1.4.2.zip</code>.</li>
 <li>Blender → <strong>Edit → Preferences → Get Extensions</strong> (or <strong>Add-ons</strong> tab).</li>
 <li>Top-right <strong>↓ Install from Disk</strong>, pick the ZIP.</li>
 <li>Enable the checkbox next to "Koo Fruit Engine".</li>
@@ -276,24 +276,34 @@ The button turns red with <code>*</code> whenever markers have moved without a f
 <p>Switch to the <strong>🎲 Stylized</strong> tab.
 <strong>Quality / Preset</strong> dropdown → pick any <code>🎲</code> preset (Cavendish, Blue Java, Gros Michel, Lady Finger, Manzano, Plantain, Red Banana, Burro) → <strong>Load</strong>.</p>
 <p><img alt="Stylized tab with preset loaded" src="img/manual/09_stylized_preset.png" /></p>
-<h3 id="52-hero-sliders-always-visible">5.2 Hero sliders (always visible)</h3>
-<p>Shape: <strong>Length / Radius / Curvature / Bulge / Taper Asym / Depth Ratio</strong></p>
-<p>Color: <strong>Ripeness</strong> (0 green → 0.5 yellow → 1 brown-spotted), <strong>Override raw colors</strong> toggle.</p>
-<h3 id="53-advanced-sliders">5.3 Advanced sliders</h3>
-<p>Toggle <strong>"Show advanced parameters"</strong> at the bottom of the Stylized tab to reveal:</p>
-<ul>
-<li>Shape: Shoulder sharpness (pedicel / blossom), Belly eccentricity, Ovality</li>
-<li>Color: Saturation scale, Spot density</li>
-<li>Peel Geometry: Thickness, Suture Ridge</li>
-<li>Anatomy: Show Interior / Pulp / Membrane toggles, Bundle Count, Bundle Thickness ×</li>
-<li>Surface: Peel Roughness</li>
-</ul>
-<p><img alt="Advanced sliders expanded" src="img/manual/10_stylized_advanced.png" /></p>
-<p>Everything else in the JSON schema (~40 more parameters — tube radii, honey bezier controls, per-primitive roughness, SSS settings) stays file-editable. See <a href="#12-advanced--json-editable-parameters">§12 Advanced — JSON-editable parameters</a>.</p>
-<h3 id="54-generate-randomize">5.4 Generate + Randomize</h3>
+<h3 id="52-photo-stylized-bridge-when-a-realistic-preset-is-loaded">5.2 Photo → Stylized bridge (when a Realistic preset is loaded)</h3>
+<p>A <strong>📷 Photo → Stylized (keep skin)</strong> button appears at the top of the Stylized tab whenever a photo + markers are loaded. It measures the silhouette, copies the geometry into the Stylized sliders, and rebuilds on the parametric pipeline while keeping the photo strip texture as the peel skin. Used for "edit my photo banana with sliders" workflows.</p>
+<p><img alt="Photo → Stylized bridge button" src="img/manual/10a_photo_to_stylized.png" /></p>
+<h3 id="53-shape-sliders">5.3 Shape sliders</h3>
+<p>Hero: <strong>Length / Radius / Curvature / Bulge / Depth Ratio</strong> — always visible.
+Advanced (toggle <strong>"Show advanced parameters"</strong>): Bend Peak, Stem Extension, Shoulder (pedicel / blossom) Position + Sharpness, Carpels, Belly Eccentricity, Ovality + Folds.</p>
+<p><img alt="Shape sliders" src="img/manual/10b_shape.png" /></p>
+<h3 id="54-color-sliders">5.4 Color sliders</h3>
+<p>Hero: <strong>🎨 Color Style</strong> palette dropdown — Random / Olive / Berry / Wood / Space / Pastel / Metallic. Picking one rerolls the colour identity and rebuilds.
+Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Outer / Inner, Tip + Tip Reach, Pulp / Warm, Membrane / Spot.</p>
+<p><img alt="Color sliders" src="img/manual/10c_color.png" /></p>
+<h3 id="55-peel-geometry">5.5 Peel Geometry</h3>
+<p><strong>Thickness (%)</strong> of body radius (banana-size invariant — same value reads correctly on any cultivar).
+<strong>Suture Ridge (%)</strong> of peel thickness — the raised lines that follow the 3 carpels.</p>
+<p><img alt="Peel geometry" src="img/manual/10d_peel_geometry.png" /></p>
+<h3 id="56-anatomy">5.6 Anatomy</h3>
+<p><strong>Bundle Count / Thickness</strong> — number and thickness of the phloem fiber tubes inside the peel.
+<strong>Seed Density</strong> — number of seed specks along the teardrop axes.</p>
+<p><img alt="Anatomy" src="img/manual/10e_anatomy.png" /></p>
+<h3 id="57-surface">5.7 Surface</h3>
+<p><strong>Peel Roughness / Bump Amount / Bump Scale / Micro Noise</strong> — material gloss + procedural surface texture.</p>
+<p><img alt="Surface" src="img/manual/10f_surface.png" /></p>
+<h3 id="58-generate">5.8 Generate</h3>
+<p><strong>Include checkboxes</strong>: ☐ Interior / ☐ Pulp / ☐ Membrane control which primitives are <em>built</em>. Unchecked → that part is not generated at all (faster Generate, smaller scene, cleaner FBX export). Toggle them off for peel-only / pulp-only variants.</p>
 <p><strong>✨ Generate Stylized</strong> — builds the banana from current sliders.
-<strong>🎲 Randomize</strong> — rolls the hero sliders to plausible-banana values. Doesn't auto-generate — inspect first, then Generate.</p>
-<p><img alt="Randomize variations" src="img/manual/11_randomize.png" /></p>
+<strong>🎲 Random Generation</strong> — rolls every advanced slider to plausible-banana values and builds immediately. One click = new fruit. Bundle count + thickness intentionally NOT randomized (quality choices, not visual identity).</p>
+<p><img alt="Generate panel" src="img/manual/10g_generate.png" /></p>
+<p>Everything else in the JSON schema (~40 more parameters — tube radii, honey bezier controls, per-primitive roughness, SSS settings) stays file-editable. See <a href="#12-advanced--json-editable-parameters">§12 Advanced — JSON-editable parameters</a>.</p>
 <hr />
 <h2 id="6-peeling-the-banana">6. Peeling the banana</h2>
 <p>The <strong>Peel</strong> block appears after Generate. Works in both tabs.</p>

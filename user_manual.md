@@ -1,6 +1,6 @@
 # Koo Fruit Engine — User Manual
 
-> **Version 1.4.0** — Photo → 3D realistic banana with curl animation.
+> **Version 1.4.2** — Photo → 3D realistic banana with curl animation.
 > A Blender 4.2+ extension by kaiser390.
 
 ---
@@ -24,7 +24,7 @@
 
 ## 1. Installation
 
-1. Download `koo_fruit_engine-1.4.0.zip`.
+1. Download `koo_fruit_engine-1.4.2.zip`.
 2. Blender → **Edit → Preferences → Get Extensions** (or **Add-ons** tab).
 3. Top-right **↓ Install from Disk**, pick the ZIP.
 4. Enable the checkbox next to "Koo Fruit Engine".
@@ -145,32 +145,56 @@ Switch to the **🎲 Stylized** tab.
 
 ![Stylized tab with preset loaded](img/manual/09_stylized_preset.png)
 
-### 5.2 Hero sliders (always visible)
+### 5.2 Photo → Stylized bridge (when a Realistic preset is loaded)
 
-Shape: **Length / Radius / Curvature / Bulge / Taper Asym / Depth Ratio**
+A **📷 Photo → Stylized (keep skin)** button appears at the top of the Stylized tab whenever a photo + markers are loaded. It measures the silhouette, copies the geometry into the Stylized sliders, and rebuilds on the parametric pipeline while keeping the photo strip texture as the peel skin. Used for "edit my photo banana with sliders" workflows.
 
-Color: **Ripeness** (0 green → 0.5 yellow → 1 brown-spotted), **Override raw colors** toggle.
+![Photo → Stylized bridge button](img/manual/10a_photo_to_stylized.png)
 
-### 5.3 Advanced sliders
+### 5.3 Shape sliders
 
-Toggle **"Show advanced parameters"** at the bottom of the Stylized tab to reveal:
+Hero: **Length / Radius / Curvature / Bulge / Depth Ratio** — always visible.
+Advanced (toggle **"Show advanced parameters"**): Bend Peak, Stem Extension, Shoulder (pedicel / blossom) Position + Sharpness, Carpels, Belly Eccentricity, Ovality + Folds.
 
-* Shape: Shoulder sharpness (pedicel / blossom), Belly eccentricity, Ovality
-* Color: Saturation scale, Spot density
-* Peel Geometry: Thickness, Suture Ridge
-* Anatomy: Show Interior / Pulp / Membrane toggles, Bundle Count, Bundle Thickness ×
-* Surface: Peel Roughness
+![Shape sliders](img/manual/10b_shape.png)
 
-![Advanced sliders expanded](img/manual/10_stylized_advanced.png)
+### 5.4 Color sliders
 
-Everything else in the JSON schema (~40 more parameters — tube radii, honey bezier controls, per-primitive roughness, SSS settings) stays file-editable. See [§12 Advanced — JSON-editable parameters](#12-advanced--json-editable-parameters).
+Hero: **🎨 Color Style** palette dropdown — Random / Olive / Berry / Wood / Space / Pastel / Metallic. Picking one rerolls the colour identity and rebuilds.
+Advanced: **Override raw colors** unlocks per-layer pickers — Outer / Inner, Tip + Tip Reach, Pulp / Warm, Membrane / Spot.
 
-### 5.4 Generate + Randomize
+![Color sliders](img/manual/10c_color.png)
+
+### 5.5 Peel Geometry
+
+**Thickness (%)** of body radius (banana-size invariant — same value reads correctly on any cultivar).
+**Suture Ridge (%)** of peel thickness — the raised lines that follow the 3 carpels.
+
+![Peel geometry](img/manual/10d_peel_geometry.png)
+
+### 5.6 Anatomy
+
+**Bundle Count / Thickness** — number and thickness of the phloem fiber tubes inside the peel.
+**Seed Density** — number of seed specks along the teardrop axes.
+
+![Anatomy](img/manual/10e_anatomy.png)
+
+### 5.7 Surface
+
+**Peel Roughness / Bump Amount / Bump Scale / Micro Noise** — material gloss + procedural surface texture.
+
+![Surface](img/manual/10f_surface.png)
+
+### 5.8 Generate
+
+**Include checkboxes**: ☐ Interior / ☐ Pulp / ☐ Membrane control which primitives are *built*. Unchecked → that part is not generated at all (faster Generate, smaller scene, cleaner FBX export). Toggle them off for peel-only / pulp-only variants.
 
 **✨ Generate Stylized** — builds the banana from current sliders.
-**🎲 Randomize** — rolls the hero sliders to plausible-banana values. Doesn't auto-generate — inspect first, then Generate.
+**🎲 Random Generation** — rolls every advanced slider to plausible-banana values and builds immediately. One click = new fruit. Bundle count + thickness intentionally NOT randomized (quality choices, not visual identity).
 
-![Randomize variations](img/manual/11_randomize.png)
+![Generate panel](img/manual/10g_generate.png)
+
+Everything else in the JSON schema (~40 more parameters — tube radii, honey bezier controls, per-primitive roughness, SSS settings) stays file-editable. See [§12 Advanced — JSON-editable parameters](#12-advanced--json-editable-parameters).
 
 ---
 
