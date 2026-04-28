@@ -98,9 +98,42 @@ li { margin: 0.3em 0; }
 <body>
 <h1 id="koo-fruit-engine-user-manual">Koo Fruit Engine — User Manual</h1>
 <blockquote>
-<p><strong>Version 1.4.2</strong> — Photo → 3D realistic banana with curl animation.
+<p><strong>Version 1.5.0</strong> — Photo → 3D realistic banana with curl animation.
 A Blender 4.2+ extension by kaiser390.</p>
 </blockquote>
+<h3 id="whats-new-in-150">What's new in 1.5.0</h3>
+<ul>
+<li><strong>Live colour editing</strong> — every colour swatch (Outer / Inner / Tip /
+  Membrane / Pulp / Warm) and the <strong>🎨 Color Style</strong> palette dropdown
+  now reach the active banana's surface in milliseconds. Drag the
+  slider, see the change immediately — no mesh rebuild, no waiting,
+  no transform reset. Applies to the banana you have selected; pinned
+  siblings stay untouched. See §5.</li>
+<li><strong>ML auto-trace by default</strong> — the silhouette detector now uses a
+  bundled neural network model (u2netp). Drop a banana photo with a
+  natural background (table, cloth, wood) and the addon extracts a
+  clean silhouette without manual marker fixes. See §4.</li>
+<li><strong>Per-banana editing</strong> — every banana the engine generates is a
+  self-describing object. Click any part of an existing banana in the
+  viewport and the panel sliders, deform values, and skin choice mirror
+  that banana's state. Tweak and Apply rebuilds in place. Multi-banana
+  scenes stay isolated — editing one banana never touches a sibling.
+  See §9.</li>
+<li><strong>Live skin</strong> — the <code>Skin</code> dropdown (Photo Strip / Full Photo / Aurora)
+  now switches the active banana's surface instantly; no rebuild.
+  See §6.x.</li>
+<li><strong>Random Generation = +1 banana</strong> — clicking 🎲 Random Generation
+  now adds a fresh randomised banana to the scene instead of replacing
+  the existing one. The previous default banana is auto-pinned aside
+  so multi-banana variety packs build up with one click each. See §5.</li>
+<li><strong>Realistic banana reshape</strong> — the Deform panel reshapes a built
+  Realistic banana along length, radius, and curvature without losing
+  the photo skin alignment. See §8.</li>
+<li><strong>Selected Banana panel — single button</strong> — the redundant Load /
+  Update Snapshot buttons are gone. Selecting a banana mirrors its
+  state automatically; the lone <strong>Apply Mesh Changes</strong> button is
+  for shape commits (length / radius / curvature / n_carpels). See §9.</li>
+</ul>
 <hr />
 <h2 id="table-of-contents">Table of contents</h2>
 <ol>
@@ -114,13 +147,15 @@ A Blender 4.2+ extension by kaiser390.</p>
 <li><a href="#8-deform--reshape-an-existing-banana">Deform — reshape an existing banana</a></li>
 <li><a href="#9-diorama--multiple-bananas-in-one-scene">Diorama — multiple bananas in one scene</a></li>
 <li><a href="#10-presets--save-and-load-your-bananas">Presets — save and load your bananas</a></li>
-<li><a href="#11-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
-<li><a href="#12-advanced--json-editable-parameters">Advanced — JSON-editable parameters</a></li>
+<li><a href="#11-render-guide--get-a-hero-shot">Render guide — get a hero shot</a></li>
+<li><a href="#12-tips--troubleshooting">Tips &amp; troubleshooting</a></li>
+<li><a href="#13-advanced--json-editable-parameters">Advanced — JSON-editable parameters</a></li>
+<li><a href="#14-parameter-reference">Parameter reference</a></li>
 </ol>
 <hr />
 <h2 id="1-installation">1. Installation</h2>
 <ol>
-<li>Download <code>koo_fruit_engine-1.4.2.zip</code>.</li>
+<li>Download <code>koo_fruit_engine-1.5.0.zip</code>.</li>
 <li>Blender → <strong>Edit → Preferences → Get Extensions</strong> (or <strong>Add-ons</strong> tab).</li>
 <li>Top-right <strong>↓ Install from Disk</strong>, pick the ZIP.</li>
 <li>Enable the checkbox next to "Koo Fruit Engine".</li>
@@ -129,14 +164,23 @@ A Blender 4.2+ extension by kaiser390.</p>
 <p><img alt="Installing the extension" src="img/manual/01_install.png" /></p>
 <hr />
 <h2 id="2-quick-start-60-seconds">2. Quick start — 60 seconds</h2>
-<ol>
-<li>N-panel → <strong>Quality / Preset</strong> → dropdown → pick <code>★ 🎲 cavendish</code> → <strong>Load</strong>.</li>
-<li>Make sure the <strong>Realistic / Stylized</strong> tab is on <strong>🎲 Stylized</strong> (next to the preset dropdown).</li>
-<li>Scroll down → <strong>Generate</strong> box → click <strong>✨ Generate Stylized</strong>.</li>
-<li>Numpad <code>1</code> to face the banana, <code>Z</code> to toggle material preview.</li>
-</ol>
-<p>You now have a ripe Cavendish banana. Continue reading for how to feed it a photo, peel it, or animate it.</p>
-<p><img alt="60-second result" src="img/manual/02_quickstart_result.png" /></p>
+<p>A walkthrough from a fresh Blender startup to a complete banana
+in under a minute.</p>
+<p><strong>Step 1.</strong> Fresh Blender — default cube, empty world. Press <code>N</code> to open the
+N-panel and click the <strong>Koo Fruit</strong> tab on the right edge.</p>
+<p><img alt="Step 1 — fresh Blender" src="img/manual/Q1_fresh_state.png" /></p>
+<p><strong>Step 2.</strong> Click <strong>✨ Generate Stylized</strong> in the Generate box.
+~3 seconds later, 11 banana objects appear (peel, pulp, membrane,
+bundles, seeds, …).</p>
+<p><img alt="Step 2 — after Generate" src="img/manual/Q2_after_generate.png" /></p>
+<p><strong>Step 3.</strong> Press <code>Z</code> → Material Preview to see the procedural shader
+(yellow peel + cream pulp). The banana has been waiting all along —
+solid shading just hides the colour.</p>
+<p><img alt="Step 3 — material preview shading" src="img/manual/Q3_material_preview.png" /></p>
+<p><strong>Step 4.</strong> Numpad <code>.</code> (Frame Selected) to centre the banana.
+You're done. Slide any Shape value and re-Generate, or move on to
+peeling, animation, or the photo workflow.</p>
+<p><img alt="Step 4 — framed banana" src="img/manual/Q4_framed_banana.png" /></p>
 <hr />
 <h2 id="3-interface-overview">3. Interface overview</h2>
 <p>The entire addon lives in one N-panel section (<code>N → Koo Fruit</code>).
@@ -183,8 +227,14 @@ Top-to-bottom:</p>
 </tr>
 </tbody>
 </table>
-<p><img alt="N-panel overview — Realistic tab" src="img/manual/03_panel_realistic.png" /></p>
-<p><img alt="N-panel overview — Stylized tab" src="img/manual/04_panel_stylized.png" /></p>
+<p><img alt="N-panel overview — Stylized tab, basic mode" src="img/manual/M01_panel_stylized_basic.png" /></p>
+<p>Toggle <strong>"Show advanced parameters"</strong> to expand into the full
+parameter set (shape advanced rows, override colours, peel geometry,
+anatomy, surface):</p>
+<p><img alt="N-panel overview — Stylized tab, advanced mode" src="img/manual/M02_panel_stylized_advanced.png" /></p>
+<p>The Realistic tab (📷 selector) replaces the Shape/Color stack with
+Image Source + Generate + Deform:</p>
+<p><img alt="N-panel overview — Realistic tab" src="img/manual/M03_panel_realistic.png" /></p>
 <hr />
 <h2 id="4-realistic-workflow-from-photo">4. Realistic workflow — from photo</h2>
 <p>Produce a banana that matches a photograph pixel-for-pixel.</p>
@@ -196,7 +246,6 @@ An Image Editor opens automatically with the photo and <strong>48 silhouette mar
 <p>Two options — pick whichever snaps to your photo better:</p>
 <ul>
 <li><strong>🎯 Auto-trace Contour</strong> — detects the fruit edge automatically.
-  Works best on clean photos (matte background, decent contrast).
   The <strong>Strategy</strong> dropdown picks the detection algorithm:</li>
 </ul>
 <table>
@@ -208,16 +257,20 @@ An Image Editor opens automatically with the photo and <strong>48 silhouette mar
 </thead>
 <tbody>
 <tr>
+<td><code>ML Smart (u2netp)</code></td>
+<td><strong>Default.</strong> Neural-network foreground extraction. Robust on natural backgrounds (table, cloth, wood) where the fruit and background share colors. Bundled — no download needed.</td>
+</tr>
+<tr>
 <td><code>ARCHETYPE</code></td>
-<td>Clean photos — PCA + bin extrema, filters watermarks/shadows</td>
+<td>Clean photos with high contrast — PCA + bin extrema, filters watermarks/shadows</td>
 </tr>
 <tr>
 <td><code>ARCHETYPE_SNAP</code></td>
-<td>Default. Archetype + gradient edge snap</td>
+<td>Archetype + gradient edge snap</td>
 </tr>
 <tr>
 <td><code>HYBRID</code></td>
-<td>Saturation mask + edge snap — more detail but noise-prone</td>
+<td>Saturation mask + edge snap</td>
 </tr>
 <tr>
 <td><code>SATURATION</code></td>
@@ -263,12 +316,35 @@ The button turns red with <code>*</code> whenever markers have moved without a f
 </tr>
 </tbody>
 </table>
+<p>The dropdown switches the active banana's surface immediately — no
+rebuild. Try a few while looking at the viewport and pick what suits
+the scene.</p>
 <h3 id="45-generate">4.5 Generate</h3>
 <p>N-panel → <strong>Generate</strong> box → <strong>✨ Generate Realistic Banana</strong>.</p>
 <p>Blender thinks for a few seconds (LOW quality: ~4 s, HIGH quality: ~12 s) and your banana appears at the origin. Numpad <code>1</code> to align with the photo view.</p>
+<p>The full sequence in viewport (photo loaded → markers built →
+realistic banana with photo strip texture):</p>
+<p><img alt="Photo loaded with markers" src="img/manual/P1_photo_loaded.png" /></p>
+<p><img alt="After Build silhouette → realistic banana" src="img/manual/P2_markers_built_realistic.png" /></p>
 <p><img alt="Realistic banana generated" src="img/manual/08_realistic_generated.png" /></p>
 <h3 id="46-iterate">4.6 Iterate</h3>
 <p>Any time you drag a marker or change the skin mode, click <strong>Generate</strong> again. The addon clears the previous <code>banana.*</code> objects and builds fresh.</p>
+<h3 id="47-switch-to-slider-editing-keep-the-photo-skin">4.7 Switch to slider editing — keep the photo skin</h3>
+<p>Realistic banana captures the photo silhouette but locks shape into
+that exact silhouette. To <strong>edit the shape</strong> with sliders while
+<strong>keeping the photo strip texture</strong>, jump to the Stylized tab:</p>
+<ul>
+<li>The bridge button <strong>📷 Photo → Stylized (keep skin)</strong> appears at
+  the top of the Stylized tab whenever a Realistic build is loaded.</li>
+<li>Click it. The addon measures the silhouette (length / radius /
+  curvature / shoulder positions / sharpness), copies those values
+  into the Stylized sliders, and rebuilds on the parametric pipeline.</li>
+<li>Photo strip texture stays as the peel skin. Now you can slide
+  Length / Radius / Curvature freely without losing the photo-
+  accurate colour.</li>
+</ul>
+<p><img alt="Bridge button on Stylized tab" src="img/manual/P3_bridge_available.png" /></p>
+<p><img alt="After bridge — slider-driven banana with photo skin" src="img/manual/P4_after_bridge.png" /></p>
 <hr />
 <h2 id="5-stylized-workflow-from-sliders">5. Stylized workflow — from sliders</h2>
 <p>No photo, no markers — pure parametric. Use when you want a clean banana of a particular cultivar, variations via randomize, or preset-driven default bananas.</p>
@@ -278,31 +354,72 @@ The button turns red with <code>*</code> whenever markers have moved without a f
 <p><img alt="Stylized tab with preset loaded" src="img/manual/09_stylized_preset.png" /></p>
 <h3 id="52-photo-stylized-bridge-when-a-realistic-preset-is-loaded">5.2 Photo → Stylized bridge (when a Realistic preset is loaded)</h3>
 <p>A <strong>📷 Photo → Stylized (keep skin)</strong> button appears at the top of the Stylized tab whenever a photo + markers are loaded. It measures the silhouette, copies the geometry into the Stylized sliders, and rebuilds on the parametric pipeline while keeping the photo strip texture as the peel skin. Used for "edit my photo banana with sliders" workflows.</p>
-<p><img alt="Photo → Stylized bridge button" src="img/manual/10a_photo_to_stylized.png" /></p>
+<p><img alt="Photo → Stylized bridge button" src="img/manual/M31_stylized_with_bridge.png" /></p>
 <h3 id="53-shape-sliders">5.3 Shape sliders</h3>
 <p>Hero: <strong>Length / Radius / Curvature / Bulge / Depth Ratio</strong> — always visible.
 Advanced (toggle <strong>"Show advanced parameters"</strong>): Bend Peak, Stem Extension, Shoulder (pedicel / blossom) Position + Sharpness, Carpels, Belly Eccentricity, Ovality + Folds.</p>
-<p><img alt="Shape sliders" src="img/manual/10b_shape.png" /></p>
+<p><em>(See the full Stylized advanced panel screenshot in §3 for all shape
+slider rows.)</em></p>
 <h3 id="54-color-sliders">5.4 Color sliders</h3>
-<p>Hero: <strong>🎨 Color Style</strong> palette dropdown — Random / Olive / Berry / Wood / Space / Pastel / Metallic. Picking one rerolls the colour identity and rebuilds.
-Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Outer / Inner, Tip + Tip Reach, Pulp / Warm, Membrane / Spot.</p>
-<p><img alt="Color sliders" src="img/manual/10c_color.png" /></p>
+<p>Every colour control on this panel updates the <strong>active banana</strong> in
+milliseconds — no mesh rebuild. Pick a banana in the viewport, drag a
+swatch, see the result. Pinned siblings stay untouched.</p>
+<p>Hero: <strong>🎨 Color Style</strong> palette dropdown — Random / Olive / Berry /
+Wood / Space / Pastel / Metallic. Picking one swaps the active
+banana's palette in place (~ms). Position is preserved.</p>
+<p>Each palette covers a different visual zone — natural palettes
+(Random / Olive / Berry / Wood) keep the inside cream-coloured with a
+mild outer-tint leak so the banana still reads as fruit; stylized
+palettes (Space / Pastel / Metallic) blend ~50% toward the outer so
+the inside visibly tracks the palette identity:</p>
+<table>
+<thead>
+<tr>
+<th>Palette</th>
+<th>Sample</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Olive</td>
+<td><img alt="olive" src="img/manual/M11_palette_olive.png" /></td>
+</tr>
+<tr>
+<td>Berry</td>
+<td><img alt="berry" src="img/manual/M11_palette_berry.png" /></td>
+</tr>
+<tr>
+<td>Wood</td>
+<td><img alt="wood" src="img/manual/M11_palette_wood.png" /></td>
+</tr>
+<tr>
+<td>Space</td>
+<td><img alt="space" src="img/manual/M11_palette_space.png" /></td>
+</tr>
+<tr>
+<td>Pastel</td>
+<td><img alt="pastel" src="img/manual/M11_palette_pastel.png" /></td>
+</tr>
+<tr>
+<td>Metallic</td>
+<td><img alt="metallic" src="img/manual/M11_palette_metallic.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Outer / Inner, Tip + Tip Reach, Pulp / Warm, Membrane / Spot. Use this when you want exact control over a specific cultivar's colour identity.</p>
 <h3 id="55-peel-geometry">5.5 Peel Geometry</h3>
 <p><strong>Thickness (%)</strong> of body radius (banana-size invariant — same value reads correctly on any cultivar).
 <strong>Suture Ridge (%)</strong> of peel thickness — the raised lines that follow the 3 carpels.</p>
-<p><img alt="Peel geometry" src="img/manual/10d_peel_geometry.png" /></p>
 <h3 id="56-anatomy">5.6 Anatomy</h3>
 <p><strong>Bundle Count / Thickness</strong> — number and thickness of the phloem fiber tubes inside the peel.
 <strong>Seed Density</strong> — number of seed specks along the teardrop axes.</p>
-<p><img alt="Anatomy" src="img/manual/10e_anatomy.png" /></p>
 <h3 id="57-surface">5.7 Surface</h3>
 <p><strong>Peel Roughness / Bump Amount / Bump Scale / Micro Noise</strong> — material gloss + procedural surface texture.</p>
-<p><img alt="Surface" src="img/manual/10f_surface.png" /></p>
 <h3 id="58-generate">5.8 Generate</h3>
 <p><strong>Include checkboxes</strong>: ☐ Interior / ☐ Pulp / ☐ Membrane control which primitives are <em>built</em>. Unchecked → that part is not generated at all (faster Generate, smaller scene, cleaner FBX export). Toggle them off for peel-only / pulp-only variants.</p>
 <p><strong>✨ Generate Stylized</strong> — builds the banana from current sliders.
-<strong>🎲 Random Generation</strong> — rolls every advanced slider to plausible-banana values and builds immediately. One click = new fruit. Bundle count + thickness intentionally NOT randomized (quality choices, not visual identity).</p>
-<p><img alt="Generate panel" src="img/manual/10g_generate.png" /></p>
+<strong>🎲 Random Generation</strong> — rolls every advanced slider to plausible-banana values and builds immediately. One click = <strong>one more</strong> fruit added to the scene (the previous default banana is auto-pinned aside, never overwritten). Bundle count + thickness intentionally NOT randomized (quality choices, not visual identity). Strength slider in the redo panel scales the spread.</p>
+<p><img alt="Generate panel — Stylized basic" src="img/manual/M01_panel_stylized_basic.png" /></p>
 <p>Everything else in the JSON schema (~40 more parameters — tube radii, honey bezier controls, per-primitive roughness, SSS settings) stays file-editable. See <a href="#12-advanced--json-editable-parameters">§12 Advanced — JSON-editable parameters</a>.</p>
 <hr />
 <h2 id="6-peeling-the-banana">6. Peeling the banana</h2>
@@ -332,6 +449,29 @@ Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Out
 </tbody>
 </table>
 <p><img alt="Peel open with strip sliders" src="img/manual/12_peel_sliders.png" /></p>
+<p>Strip Amount sweeps from closed to fully open in one continuous slide:</p>
+<table>
+<thead>
+<tr>
+<th>Strip Amount</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.0 (closed)</td>
+<td><img alt="closed" src="img/manual/M20_peel_closed.png" /></td>
+</tr>
+<tr>
+<td>0.5 (half open)</td>
+<td><img alt="half" src="img/manual/M21_peel_half.png" /></td>
+</tr>
+<tr>
+<td>1.0 (fully open)</td>
+<td><img alt="full" src="img/manual/M22_peel_fully_open.png" /></td>
+</tr>
+</tbody>
+</table>
 <h3 id="62-uniform-mode">6.2 Uniform mode</h3>
 <p>Turn on <strong>Uniform strips</strong> to drive all three strips with one Amount + Curl pair. Fast way to open the whole peel symmetrically.</p>
 <h3 id="63-suture-cross-section">6.3 Suture cross-section</h3>
@@ -342,6 +482,18 @@ Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Out
 <li><strong>Outer Clearance</strong>: fraction of the peel-layer span reserved near the epidermis — keeps bundles from shadowing through the outer shell.</li>
 </ul>
 <p><img alt="Peeled banana with bundle-packed suture" src="img/manual/13_peel_curled_bundles.png" /></p>
+<h3 id="64-cylinder-shoulder-sticker-lift-new-in-t143">6.4 Cylinder-shoulder sticker lift <em>(new in t1.4.3)</em></h3>
+<p>When the shoulder is near-flat — <code>shoulder_sharpness_pedicel</code> and
+<code>_blossom</code> both below 0.30 (e.g. cylindrical novelty bananas, lady-
+finger types, or mid-Generate sweep tests) — the strip's natural curl
+at small <code>Amount</code> is too small to clear the shoulder line and the
+strip self-intersects the body. From t1.4.3 onward the strip lifts
+radially outward like a sticker peel for the first ~12% of <code>Amount</code>,
+then natural curl takes over smoothly.</p>
+<p>No new slider — the lift engages automatically when both shoulder
+sharpness sliders fall below the threshold; default banana
+(sharpness ≈ 0.33) sees no behaviour change.</p>
+<p><img alt="Cylinder banana, sticker lift at Amount 0.10" src="img/manual/M23_cylinder_sticker_lift.png" /></p>
 <hr />
 <h2 id="7-peel-animation">7. Peel animation</h2>
 <h3 id="71-enable">7.1 Enable</h3>
@@ -407,10 +559,32 @@ Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Out
 <li>Rinse + repeat. Frame + render.</li>
 </ol>
 <p><img alt="Diorama — five pinned bananas" src="img/manual/18_diorama.png" /></p>
-<h3 id="92-caveats">9.2 Caveats</h3>
+<h3 id="92-per-banana-editing-click-any-banana-to-edit">9.2 Per-banana editing — click any banana to edit</h3>
+<p>Each banana the engine builds — pinned or active — is self-describing.
+Click any part of it (peel, pulp, bundles, …) in the viewport and the
+panel rewires to that banana's state:</p>
 <ul>
-<li>Pinned bananas are <strong>frozen</strong> — peel curl, deform and animation only affect the active (non-pinned) banana.</li>
-<li>If you want to edit a pinned banana later, Outliner → rename its prefix back to <code>banana.</code>. But the next Generate will clear it, so save a preset first.</li>
+<li>The panel sliders (length, radius, curvature, peel curl, color,
+  skin choice) reflect the clicked banana.</li>
+<li>A <strong>Selected Banana</strong> box appears at the top of the panel showing
+  the banana's identity and which mode (Realistic / Stylized) it
+  was built from.</li>
+</ul>
+<p>Tweak the panel and press <strong>Apply Mesh Changes</strong> in the Selected
+Banana box — the addon rebuilds <strong>that banana in place</strong>, leaving
+its sibling bananas untouched. Multi-banana scenes therefore keep
+an editable state for every banana in the scene, not just the most
+recent build.</p>
+<p>The Selected Banana box now hosts a single button. Colour, skin, and
+material slider drags update the active banana live (no rebuild),
+so the panel stays clean — Apply Mesh Changes is reserved for shape
+edits (length / radius / curvature / n_carpels) that need a fresh
+mesh.</p>
+<h3 id="93-caveats">9.3 Caveats</h3>
+<ul>
+<li>The mesh has to be rebuilt for shape / topology / curl-bake changes
+  (Apply Mesh Changes button). Slider tweaks that touch only colour /
+  skin / material update live without rebuild.</li>
 </ul>
 <hr />
 <h2 id="10-presets-save-and-load-your-bananas">10. Presets — save and load your bananas</h2>
@@ -467,21 +641,212 @@ Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Out
 <p>Found at the bottom of the Stylized tab. Writes the current state to the well-known <code>user_default</code> preset slot. Reload any time via the dropdown to return to your personal default banana.</p>
 <p><img alt="Save as Default" src="img/manual/20_save_as_default.png" /></p>
 <hr />
-<h2 id="11-tips-troubleshooting">11. Tips &amp; troubleshooting</h2>
-<h3 id="the-peel-pulp-pokes-out-of-the-silhouette">The peel / pulp pokes out of the silhouette</h3>
-<p>On highly-curved bananas this can happen at the narrow stem neck. Workaround: in the Realistic tab, drag the <strong>Neck</strong> markers slightly into the body (toward the thick midpoint). That shrinks the pulp's axial range so it stays clear of the narrow region.</p>
-<h3 id="photo-looks-tiled-or-smeared-on-the-back-of-the-peel">Photo looks tiled or smeared on the back of the peel</h3>
-<p>The planar-XZ UV is mirror-symmetric about the Y axis by design — the back gets the mirrored photo. From the camera angle that shot the original photo, this is invisible. If you render from the opposite side, expect mirrored pigment.</p>
-<h3 id="markers-auto-place-back-to-the-default-ellipse-when-i-load-a-preset">Markers auto-place back to the default ellipse when I load a preset</h3>
-<p>Fixed in v1.3. If you still see it, make sure the preset was saved in v1.3+ (it'll have <code>markers_version</code> in its JSON).</p>
-<h3 id="generate-is-slow">Generate is slow</h3>
-<p>Drop <strong>Quality</strong> from <code>HIGH</code> to <code>LOW</code> — still production-grade mesh density (48 × 60 rings, 60 bundles).</p>
-<h3 id="i-want-to-change-a-parameter-thats-not-in-the-n-panel">I want to change a parameter that's not in the N-panel</h3>
-<p>See <a href="#12-advanced--json-editable-parameters">§12 Advanced — JSON-editable parameters</a>.</p>
-<h3 id="addon-didnt-install-cant-find-koo-fruit-tab">Addon didn't install / can't find Koo Fruit tab</h3>
-<p>Blender 4.2+ is required. For 4.2 LTS you may need to enable "Extensions" in Preferences first.</p>
+<h2 id="11-render-guide-get-a-hero-shot">11. Render guide — get a hero shot</h2>
+<p>The procedural shader uses vertex colours + procedural bump as Base
+Color, so the look depends heavily on lighting. A poor light setup
+makes any banana read flat or washed out — get this right before
+exporting renders.</p>
+<h3 id="111-material-preview-render">11.1 Material preview ≠ render</h3>
+<p>Switch the viewport to <strong>Material Preview</strong> (top-right shading icons,
+or <code>Z</code> → Material Preview) to see colours interactively. This uses
+Blender's matcap-style preview lighting and is <strong>always vivid</strong> —
+it's a different lighting setup from F12 render. Don't be surprised
+if the F12 render looks different.</p>
+<h3 id="112-world-hdri-the-single-biggest-lighting-decision">11.2 World HDRI — the single biggest lighting decision</h3>
+<p><code>Properties → World → Surface → Background → use Image Texture</code> and
+load an <code>.exr</code>. Blender ships built-in HDRIs at:</p>
+<pre><code>{blender install}/{version}/datafiles/studiolights/world/
+  sunrise.exr   forest.exr   interior.exr   night.exr
+</code></pre>
+<p><strong>Strength</strong> controls how dominant the HDRI is in lighting:
+- <strong>0.2 ~ 0.5</strong>: vivid product-shot look, banana yellow stays
+  saturated. Recommended for hero shots.
+- <strong>0.8 ~ 1.5</strong>: outdoor daylight feel, banana reads pale-cream.
+  Good for "in the wild" scenes.
+- <strong>&gt;2.0</strong>: blown out, banana looks white. Avoid.</p>
+<h3 id="113-outdoor-vs-indoor-hdri-same-banana-different-read">11.3 Outdoor vs indoor HDRI — same banana, different read</h3>
+<table>
+<thead>
+<tr>
+<th>Outdoor (sunrise.exr, strength 0.25)</th>
+<th>Indoor (interior.exr, strength 0.25)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="outdoor Eevee" src="img/manual/R1_eevee_outdoor.png" /></td>
+<td><img alt="indoor Eevee" src="img/manual/R1_eevee_indoor.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>Outdoor: bright sky lighting → pale cream banana, washed-out
+saturation. Indoor: warm interior lighting → vivid yellow with
+visible green tip.</p>
+<h3 id="114-eevee-vs-cycles">11.4 Eevee vs Cycles</h3>
+<p>Both engines use the same shader. The differences:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Eevee</th>
+<th>Cycles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Speed (1280×1280, 1 frame)</td>
+<td>~1 s</td>
+<td>~30 s (32 samples)</td>
+</tr>
+<tr>
+<td>SSS quality</td>
+<td>Approximate (real-time)</td>
+<td>Path-traced (true)</td>
+</tr>
+<tr>
+<td>Bundle / fiber translucency</td>
+<td>Approximate</td>
+<td>Accurate</td>
+</tr>
+<tr>
+<td>Final render fidelity</td>
+<td>"Looks great"</td>
+<td>"Looks photorealistic"</td>
+</tr>
+</tbody>
+</table>
+<p>For Adrian / Superhive submission shots — <strong>Cycles</strong>.
+For animation playback / iteration — <strong>Eevee</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Eevee (indoor)</th>
+<th>Cycles (indoor)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img alt="" src="img/manual/R1_eevee_indoor.png" /></td>
+<td><img alt="" src="img/manual/R2_cycles_indoor.png" /></td>
+</tr>
+</tbody>
+</table>
+<p>In good lighting the difference is subtle. In dramatic lighting
+(strong rim light, deep shadows, SSS through thin pulp) Cycles wins.</p>
+<h3 id="115-camera-framing">11.5 Camera framing</h3>
+<p>For a single-banana hero shot:
+* Camera lens: <strong>50–60 mm</strong> (50 = natural, 60 = slight compression)
+* Camera height ≈ banana mid-Z (so the banana fills the frame
+  vertically, not diving down or pointing up)
+* Distance: ~3 × banana length (so the banana occupies ~70% of frame
+  height, with 15% margin top + bottom)
+* Slight azimuthal angle (30–45°) reads more sculptural than a flat
+  side view</p>
+<pre><code class="language-python"># Camera setup snippet (paste into Blender's Python console):
+import math
+cam = bpy.data.objects[&quot;Camera&quot;]
+cam.location = (0.20, -0.28, 0.04)
+cam.rotation_euler = (math.radians(85), 0, math.radians(36))
+cam.data.lens = 60
+</code></pre>
+<h3 id="116-output-settings-checklist">11.6 Output settings checklist</h3>
+<ul>
+<li><code>Properties → Output</code> → resolution <strong>1280×1280</strong> for thumbnails,
+  <strong>2048×2048</strong> for hero shots</li>
+<li>Eevee: enable <strong>Bloom</strong> for honey-halo glow, <strong>Screen-space
+  reflections</strong> off (peel is matte) or low strength</li>
+<li>Cycles: 32 samples test, <strong>128 samples</strong> final, <strong>Denoise</strong> ON
+  (OptiX or NLM)</li>
+<li><code>Properties → Color Management → Look</code> = <strong>High Contrast</strong> for
+  product-shot punch, <strong>Standard</strong> for accurate colours</li>
+</ul>
 <hr />
-<h2 id="12-advanced-json-editable-parameters">12. Advanced — JSON-editable parameters</h2>
+<h2 id="12-tips-troubleshooting">12. Tips &amp; troubleshooting</h2>
+<h3 id="geometry-mesh-issues">Geometry / mesh issues</h3>
+<p><strong>The peel / pulp pokes out of the silhouette.</strong> On highly-curved bananas
+this can happen at the narrow stem neck. Workaround: in the Realistic
+tab, drag the <strong>Neck</strong> markers slightly into the body (toward the
+thick midpoint). That shrinks the pulp's axial range so it stays
+clear of the narrow region.</p>
+<p><strong>Cylinder banana with low shoulder sharpness has a flickering peel
+strip.</strong> From t1.4.3 the peel strip lifts radially (sticker mode) at
+small Amount when both shoulder sharpness sliders are below 0.30.
+This is correct behaviour — see §6.4. If you want the old slide-into-
+shoulder behaviour, raise sharpness to ≥0.30.</p>
+<p><strong>Random Generation produces extreme bananas sometimes.</strong> Lower the
+Variation Strength slider in the Random Generation operator's redo
+panel (<code>F9</code>). 0.0 = defaults only; 0.7 (default) = wide range.</p>
+<h3 id="color-material-issues">Color / material issues</h3>
+<p><strong>Random Color makes everything look the same.</strong> Fixed in t1.4.3 —
+each palette now visibly tints the inner layers. If you still see
+identical inners, you're on an old version (check
+<code>Edit &gt; Preferences &gt; Get Extensions &gt; Koo Fruit Engine</code> shows
+<strong>1.4.3-test</strong>).</p>
+<p><strong>The banana renders pale/white instead of yellow.</strong> The procedural
+shader uses vertex colours as Base Color; bright HDRI strength
+(&gt;1.5) washes saturated yellow toward cream. Drop World HDRI
+strength to 0.25–0.5 (see §11.2).</p>
+<p><strong>Photo looks tiled or smeared on the back of the peel.</strong> The planar-
+XZ UV is mirror-symmetric about the Y axis by design — the back gets
+the mirrored photo. From the camera angle that shot the original
+photo, this is invisible. If you render from the opposite side,
+expect mirrored pigment.</p>
+<p><strong>Vertex colours don't show in viewport.</strong> Switch viewport shading
+from <code>Solid</code> to <code>Material Preview</code> (top-right shading icons or <code>Z</code>).
+Solid mode shows uniform gray.</p>
+<h3 id="workflow-panel-issues">Workflow / panel issues</h3>
+<p><strong>Markers auto-place back to the default ellipse when I load a
+preset.</strong> Fixed in v1.3. If you still see it, make sure the preset was
+saved in v1.3+ (it'll have <code>markers_version</code> in its JSON).</p>
+<p><strong>Photo → Stylized button doesn't show.</strong> It only appears when a
+Realistic build with markers + photo is loaded. If your photo has no
+markers yet, click <strong>Build silhouette markers</strong> in the Realistic tab
+first. The button uses <code>bpy.ops.fruit.realistic_to_stylized.poll()</code>
+to gate visibility.</p>
+<p><strong>Confirm button is red with <code>*</code> after I touch a marker.</strong> That's
+the dirty-state signal — markers have moved without a fresh build.
+Click Confirm or <strong>Generate Realistic Banana</strong> to clear it.</p>
+<p><strong>Save as Default doesn't persist after Blender restart.</strong> It saves
+to the <code>user_default</code> preset slot. Verify by reopening the preset
+dropdown after restart — <code>user_default</code> should be present and Load
+should restore your values.</p>
+<h3 id="performance">Performance</h3>
+<p><strong>Generate is slow.</strong> Drop <strong>Quality</strong> from <code>HIGH</code> to <code>LOW</code> — still
+production-grade mesh density (48 × 60 rings, 60 bundles). LOW
+~3 s, HIGH ~30+ s.</p>
+<p><strong>I have 100 bananas in the scene and Blender is sluggish.</strong> Each
+Pin creates a separate set of 11 mesh objects (~100k verts × 11 ≈ 1M
+verts at LOW). For diorama scenes &gt;50 bananas, generate at LOW and
+consider decimating the inner pulp/bundles after Pin (they're
+mostly hidden anyway).</p>
+<p><strong>Cycles render takes minutes.</strong> 32 samples is preview, 128 is
+final. Use OptiX denoise (<code>Properties → Render → Sampling → Denoise
+→ OptiX</code>) to cut effective sample count by 4×.</p>
+<h3 id="export-interchange">Export / interchange</h3>
+<p><strong>FBX export loses the procedural shader.</strong> Procedural shaders don't
+survive FBX export (Unity / Unreal / Maya can't replay Blender's
+node graph). Bake materials before export: <code>Properties → Render →
+Bake → Diffuse → bake to texture</code>, then export FBX with the baked
+texture maps. The vertex colours survive — most engines can read
+them as a <code>COLOR_0</code> attribute.</p>
+<p><strong>glTF export looks correct but bigger than expected.</strong> Procedural
+bumps are baked into normal maps during glTF export, which adds
+texture file size. For tight asset packs, bake at 1024×1024 instead
+of the default 2048.</p>
+<h3 id="other">Other</h3>
+<p><strong>I want to change a parameter that's not in the N-panel.</strong> See
+<a href="#13-advanced--json-editable-parameters">§13 Advanced — JSON-editable parameters</a>.</p>
+<p><strong>Addon didn't install / can't find Koo Fruit tab.</strong> Blender 4.2+ is
+required. For 4.2 LTS you may need to enable "Extensions" in
+Preferences first.</p>
+<p><strong>Where do I report a bug?</strong> Email the maintainer with:
+1. Blender version (<code>Help → About</code>)
+2. Extension version (Preferences → Get Extensions → Koo Fruit Engine)
+3. Steps to reproduce
+4. The <code>.blend</code> file (Save the offending state)
+5. Console log if there's a Python traceback</p>
+<hr />
+<h2 id="13-advanced-json-editable-parameters">13. Advanced — JSON-editable parameters</h2>
 <p>The N-panel exposes ~22 curated hero parameters. The JSON preset schema defines ~60+ more. To edit them:</p>
 <ul>
 <li><strong>User preset</strong>: edit <code>%APPDATA%/Blender Foundation/Blender/5.0/config/fruit_engine/presets/&lt;name&gt;.json</code>, then <code>Load</code> from the dropdown.</li>
@@ -493,10 +858,1753 @@ Advanced: <strong>Override raw colors</strong> unlocks per-layer pickers — Out
 <code>addon/koo_fruit_engine/data/parameters/banana.json</code>
 — same schema for every fruit archetype.</p>
 <hr />
+<h2 id="14-parameter-reference">14. Parameter reference</h2>
+<p>This appendix is generated from the live property definitions on <code>scene.fruit_engine</code>. <strong>179 parameters</strong> across <strong>8 groups</strong>; <strong>56</strong> are exposed in the N-panel (UI Label column shows the slider name as it appears in Blender). The remaining 123 are JSON-only — edit the preset file to access them (see §13).</p>
+<h3 id="meta-group"><code>meta</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Preset</strong></td>
+<td><code>meta.preset_selection</code></td>
+<td>enum</td>
+<td>``</td>
+<td></td>
+<td></td>
+<td>Choose a cultivar — auto-applies to the 3D viewport</td>
+</tr>
+<tr>
+<td><strong>🔬 Profile Generate</strong></td>
+<td><code>meta.profile_generate</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td>Time each pipeline stage and dump a breakdown to comms/profile_generate_result.txt on every Gener…</td>
+</tr>
+<tr>
+<td><strong>Show advanced parameters</strong></td>
+<td><code>meta.stylized_show_advanced</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td>Reveal the extra 10+ parametric knobs (shoulder sharpness, ovality, spot density, peel thickness,…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.auto_regen</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td>When on, regenerate 0.3s after any geometry / material parameter change.  Default OFF in koo — us…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.autosave_last_state</code></td>
+<td>bool</td>
+<td>True</td>
+<td>—</td>
+<td>—</td>
+<td>Write current parameter values to disk after every regenerate, so the next Blender session starts…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.fruit_type</code></td>
+<td>enum</td>
+<td>``</td>
+<td></td>
+<td></td>
+<td>Which fruit archetype to generate</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.generate_mode</code></td>
+<td>enum</td>
+<td><code>REPLACE</code></td>
+<td><code>REPLACE</code>, <code>ADD</code></td>
+<td></td>
+<td>What to do with this archetype's existing objects</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.quality</code></td>
+<td>enum</td>
+<td><code>LOW</code></td>
+<td><code>LOW</code>, <code>HIGH</code></td>
+<td></td>
+<td>Mesh density / render fidelity</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.render_style</code></td>
+<td>enum</td>
+<td><code>REALISTIC</code></td>
+<td><code>REALISTIC</code>, <code>STYLIZED</code></td>
+<td></td>
+<td>REALISTIC = full SSS + specular + normal detail. STYLIZED = flatter shading + saturated colors + …</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.rng_base_seed</code></td>
+<td>int</td>
+<td>42</td>
+<td>0</td>
+<td>2147483647</td>
+<td>Global RNG anchor. Change to produce variant models</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.ui_mode</code></td>
+<td>enum</td>
+<td><code>TOY</code></td>
+<td><code>TOY</code>, <code>ADVANCED</code></td>
+<td></td>
+<td>Toy = 6 hero sliders, fun-first layout. Advanced = full 50+ parameter control.</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>meta.workflow_mode</code></td>
+<td>enum</td>
+<td><code>REALISTIC</code></td>
+<td><code>REALISTIC</code>, <code>STYLIZED</code></td>
+<td></td>
+<td>Realistic = photo + markers pipeline. Stylized = parametric shape/color sliders, no photo needed.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="shape-group"><code>shape</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Belly Ecc</strong></td>
+<td><code>shape.belly_eccentricity</code></td>
+<td>float</td>
+<td>0.15</td>
+<td>0</td>
+<td>0.3</td>
+<td>Cross-section offset toward the convex (belly) side. 0 = symmetric, 0.15 = Cavendish observed, 0.…</td>
+</tr>
+<tr>
+<td><strong>Bulge</strong></td>
+<td><code>shape.bulge</code></td>
+<td>float</td>
+<td>0.085</td>
+<td>0</td>
+<td>0.5</td>
+<td>Carpel bulge factor (1 + bulge·cos(3θ)). Higher = more pentagonal cross-section</td>
+</tr>
+<tr>
+<td><strong>Ovality</strong></td>
+<td><code>shape.cross_section_ovality</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>0.3</td>
+<td>Secondary ridge amplitude (0 = rounded / no secondary ridges, 0.3 = strong). Sign is visually a n…</td>
+</tr>
+<tr>
+<td><strong>Ovality Folds</strong></td>
+<td><code>shape.cross_section_ovality_folds</code></td>
+<td>int</td>
+<td>5</td>
+<td>2</td>
+<td>12</td>
+<td>Secondary ridge frequency around the cross-section. Default 5 combined with 3-fold carpel bulge g…</td>
+</tr>
+<tr>
+<td><strong>Bend Peak</strong></td>
+<td><code>shape.curl_peak_frac</code></td>
+<td>float</td>
+<td>0.5</td>
+<td>0.2</td>
+<td>0.8</td>
+<td>Where along the length the curvature peaks. 0.5 = symmetric arc; &lt;0.5 = peak near pedicel</td>
+</tr>
+<tr>
+<td><strong>Curvature</strong></td>
+<td><code>shape.curvature</code></td>
+<td>float</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>Bend amount (0 = straight)</td>
+</tr>
+<tr>
+<td><strong>Curvature Δ</strong></td>
+<td><code>shape.deform_curvature_delta</code></td>
+<td>float</td>
+<td>0</td>
+<td>-1</td>
+<td>1</td>
+<td>ADDITIONAL bend applied on top of the original banana's natural curvature. 0 = no change (natural…</td>
+</tr>
+<tr>
+<td><strong>Length ×</strong></td>
+<td><code>shape.deform_length_scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0.5</td>
+<td>2</td>
+<td>Scale along the stem→stigma axis before rebuild</td>
+</tr>
+<tr>
+<td><strong>Radius ×</strong></td>
+<td><code>shape.deform_radius_scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0.5</td>
+<td>2</td>
+<td>Scale perpendicular to the stem→stigma axis before rebuild</td>
+</tr>
+<tr>
+<td><strong>Depth Ratio</strong></td>
+<td><code>shape.depth_ratio</code></td>
+<td>float</td>
+<td>0.85</td>
+<td>0.5</td>
+<td>1</td>
+<td>Cross-section aspect: depth / width</td>
+</tr>
+<tr>
+<td><strong>Length</strong></td>
+<td><code>shape.length</code></td>
+<td>float</td>
+<td>0.22</td>
+<td>0.05</td>
+<td>1</td>
+<td>Banana length in meters</td>
+</tr>
+<tr>
+<td><strong>Radius</strong></td>
+<td><code>shape.radius</code></td>
+<td>float</td>
+<td>0.03</td>
+<td>0.005</td>
+<td>0.2</td>
+<td>Cross-section half-radius in meters</td>
+</tr>
+<tr>
+<td><strong>Sharpness</strong></td>
+<td><code>shape.shoulder_sharpness_blossom</code></td>
+<td>float</td>
+<td>0.33</td>
+<td>0</td>
+<td>3</td>
+<td>Curvature at the blossom-end shoulder. Same semantics</td>
+</tr>
+<tr>
+<td><strong>Sharpness</strong></td>
+<td><code>shape.shoulder_sharpness_pedicel</code></td>
+<td>float</td>
+<td>0.33</td>
+<td>0</td>
+<td>3</td>
+<td>Curvature at the stem-end shoulder. &lt;1 = plump (cylinder), &gt;1 = skinny (pencil-like). 0 ≈ fully f…</td>
+</tr>
+<tr>
+<td><strong>Stem Extension</strong></td>
+<td><code>shape.stem_extension_frac</code></td>
+<td>float</td>
+<td>0.15</td>
+<td>0</td>
+<td>0.5</td>
+<td>Fraction of body length the cluster projects past u=0 as an emergent pedicel stub (peel + bundles…</td>
+</tr>
+<tr>
+<td><strong>Position</strong></td>
+<td><code>shape.taper_shoulder_frac</code></td>
+<td>float</td>
+<td>0.33</td>
+<td>0.05</td>
+<td>0.45</td>
+<td>Length fraction of the wide pedicel-side shoulder</td>
+</tr>
+<tr>
+<td><strong>Position</strong></td>
+<td><code>shape.taper_tip_frac</code></td>
+<td>float</td>
+<td>0.18</td>
+<td>0.05</td>
+<td>0.45</td>
+<td>Length fraction of the tapered blossom-side tip</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>shape.bend_plane_angle</code></td>
+<td>float</td>
+<td>0</td>
+<td>-3.142</td>
+<td>3.142</td>
+<td>Rotate bend plane around Z (0 = concave faces +X)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>shape.pedicel_tip_frac</code></td>
+<td>float</td>
+<td>0.35</td>
+<td>0.15</td>
+<td>0.6</td>
+<td>Body radius fraction at the pedicel end (neck bottleneck). 0.35 = Cavendish photo measurement</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>shape.taper_asymmetry</code></td>
+<td>float</td>
+<td>0.3</td>
+<td>-1</td>
+<td>1</td>
+<td>-1 = pedicel heavier, +1 = blossom heavier, 0 = symmetric</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>shape.twist</code></td>
+<td>float</td>
+<td>0</td>
+<td>-3.142</td>
+<td>3.142</td>
+<td>Axial twist along length</td>
+</tr>
+</tbody>
+</table>
+<h3 id="color-group"><code>color</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Membrane</strong></td>
+<td><code>color.membrane</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Override raw colors</strong></td>
+<td><code>color.override_raw</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td>Raw pickers win over ripeness-driven blend</td>
+</tr>
+<tr>
+<td><strong>Inner</strong></td>
+<td><code>color.peel_flesh_side</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Tip</strong></td>
+<td><code>color.peel_green_tip</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Outer</strong></td>
+<td><code>color.peel_outer</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Pulp</strong></td>
+<td><code>color.pulp_pearl</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Warm</strong></td>
+<td><code>color.pulp_warm</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Tip Reach</strong></td>
+<td><code>color.tip_green_frac</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>0</td>
+<td>0.5</td>
+<td>Fraction of length at each tip kept green-tinged</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.bundle_inner</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.bundle_outer</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.fiber_inner</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.fiber_outer</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.honey_band_intensity</code></td>
+<td>float</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.honey_dark</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.honey_light</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.peel_brown_spot</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.pericarp_inner</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.pericarp_outer</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.ripeness</code></td>
+<td>float</td>
+<td>0.5</td>
+<td>0</td>
+<td>1</td>
+<td>0 = green unripe, 0.5 = ripe yellow, 1 = brown-spotted</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.saturation_scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.seed_dark</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.seed_light</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.spot_density</code></td>
+<td>float</td>
+<td>0.3</td>
+<td>0</td>
+<td>1</td>
+<td>Brown age-spot scatter density</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.spot_size_mean</code></td>
+<td>float</td>
+<td>0.004</td>
+<td>0.001</td>
+<td>0.02</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.spot_size_variance</code></td>
+<td>float</td>
+<td>0.5</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.stem</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.teardrop_inner</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.teardrop_outer</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.tip_green_shift</code></td>
+<td>float</td>
+<td>0.15</td>
+<td>-0.2</td>
+<td>0.4</td>
+<td>Hue shift toward green at tips</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>color.yellow_dot</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="peel-group"><code>peel</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fiber cling</strong></td>
+<td><code>peel.inner_fiber_cling</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0 = fibers curl with peel, 1 = fibers stay on flesh</td>
+</tr>
+<tr>
+<td><strong>Peel Open</strong></td>
+<td><code>peel.open</code></td>
+<td>bool</td>
+<td>True</td>
+<td>—</td>
+<td>—</td>
+<td>Enable peel strip shape keys</td>
+</tr>
+<tr>
+<td><strong>Amount</strong></td>
+<td><code>peel.strip1_amount</code></td>
+<td>float</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Curl</strong></td>
+<td><code>peel.strip1_curl</code></td>
+<td>float</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Suture Ridge</strong></td>
+<td><code>peel.suture_ridge_height_pct</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>30</td>
+<td>As % of peel thickness</td>
+</tr>
+<tr>
+<td><strong>Thickness</strong></td>
+<td><code>peel.thickness_pct</code></td>
+<td>float</td>
+<td>0</td>
+<td>2</td>
+<td>30</td>
+<td>As % of body radius</td>
+</tr>
+<tr>
+<td><strong>Uniform strips</strong></td>
+<td><code>peel.uniform</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td>Link all three strip sliders (move together)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.feather_cap</code></td>
+<td>float</td>
+<td>0.02</td>
+<td>0.001</td>
+<td>0.1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.feather_frac</code></td>
+<td>float</td>
+<td>0.15</td>
+<td>0</td>
+<td>0.5</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.max_curl_angle</code></td>
+<td>float</td>
+<td>2.618</td>
+<td>1.57</td>
+<td>3.15</td>
+<td>Maximum tip angle at curl=1, amount=1</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.pedicel_anchor_frac</code></td>
+<td>float</td>
+<td>0.25</td>
+<td>0</td>
+<td>0.5</td>
+<td>Fraction of body from the pedicel end that stays attached at full peel (amount=1). 0 = peel comes…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.strip2_amount</code></td>
+<td>float</td>
+<td>0.5</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.strip2_curl</code></td>
+<td>float</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.strip3_amount</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.strip3_curl</code></td>
+<td>float</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>Strip 3 shares banana bend plane — lower if curls collide with flesh</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.suture_ridge_height</code></td>
+<td>float</td>
+<td>0.00015</td>
+<td>0</td>
+<td>0.001</td>
+<td>Absolute ridge peak height (m)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.suture_ridge_taper</code></td>
+<td>float</td>
+<td>0.3</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.suture_ridge_width_deg</code></td>
+<td>float</td>
+<td>60</td>
+<td>20</td>
+<td>120</td>
+<td>Angular width of each suture ridge</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.thickness</code></td>
+<td>float</td>
+<td>0.003</td>
+<td>0.0005</td>
+<td>0.01</td>
+<td>Absolute peel thickness in meters</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>peel.thickness_variation</code></td>
+<td>float</td>
+<td>0.2</td>
+<td>0</td>
+<td>1</td>
+<td>0 = uniform. 1 = 30% thinner at blossom tip</td>
+</tr>
+</tbody>
+</table>
+<h3 id="anatomy-group"><code>anatomy</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bundle Count</strong></td>
+<td><code>anatomy.bundles.density</code></td>
+<td>int</td>
+<td>0</td>
+<td>0</td>
+<td>800</td>
+<td>Total number of scattered phloem bundles (outer 4 layers). 0 = auto from Quality (LOW 60 / MED 20…</td>
+</tr>
+<tr>
+<td><strong>Outer Clearance</strong></td>
+<td><code>anatomy.bundles.outer_gap_frac</code></td>
+<td>float</td>
+<td>0.3</td>
+<td>0</td>
+<td>0.5</td>
+<td>Fraction of the peel-layer radial span reserved near the outer shell where body bundles are NOT s…</td>
+</tr>
+<tr>
+<td><strong>Bundle Thickness</strong></td>
+<td><code>anatomy.bundles.radius_scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0.5</td>
+<td>2</td>
+<td>Scale all bundle tube radii</td>
+</tr>
+<tr>
+<td><strong>Band (°)</strong></td>
+<td><code>anatomy.bundles.suture_band_deg</code></td>
+<td>float</td>
+<td>5</td>
+<td>0</td>
+<td>20</td>
+<td>Gaussian 3σ half-width in degrees. Peak density sits AT the suture angle; ~99.7 % of the extra bu…</td>
+</tr>
+<tr>
+<td><strong>Pack</strong></td>
+<td><code>anatomy.bundles.suture_pack_frac</code></td>
+<td>float</td>
+<td>0.3</td>
+<td>0</td>
+<td>10</td>
+<td>Extra bundles packed at peel suture lines (θ = 60°/180°/300°) so a curled strip's exposed cross-s…</td>
+</tr>
+<tr>
+<td><strong>Carpels</strong></td>
+<td><code>anatomy.n_carpels</code></td>
+<td>int</td>
+<td>3</td>
+<td>2</td>
+<td>12</td>
+<td>Number of carpels = primary ridge count around the cross-section. 3 = banana (Musa), 5 = apple, 2…</td>
+</tr>
+<tr>
+<td><strong>Seed Density</strong></td>
+<td><code>anatomy.seeds.count_per_line</code></td>
+<td>int</td>
+<td>8</td>
+<td>1</td>
+<td>20</td>
+<td>Number of seed specks along each of the 6 teardrop axes</td>
+</tr>
+<tr>
+<td><strong>Interior</strong></td>
+<td><code>anatomy.show_interior</code></td>
+<td>bool</td>
+<td>True</td>
+<td>—</td>
+<td>—</td>
+<td>Include bundles / honey halo / teardrops / seeds</td>
+</tr>
+<tr>
+<td><strong>Membrane</strong></td>
+<td><code>anatomy.show_membrane</code></td>
+<td>bool</td>
+<td>True</td>
+<td>—</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Pulp</strong></td>
+<td><code>anatomy.show_pulp</code></td>
+<td>bool</td>
+<td>True</td>
+<td>—</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.color_falloff_power</code></td>
+<td>float</td>
+<td>1.2</td>
+<td>0.5</td>
+<td>3</td>
+<td>Power curve for radial color gradient (inner→outer)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.layer_weights</code></td>
+<td>str</td>
+<td>'2,4,8,16'</td>
+<td>—</td>
+<td>—</td>
+<td>Comma-separated density ratio per radial layer (outward)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.n_tube_seg</code></td>
+<td>int</td>
+<td>10</td>
+<td>6</td>
+<td>20</td>
+<td>Polygon sides per bundle tube cross-section</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.r_inner</code></td>
+<td>float</td>
+<td>0.33</td>
+<td>0.1</td>
+<td>0.6</td>
+<td>Normalized r∈[0,1] boundary at flesh side</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.r_outer</code></td>
+<td>float</td>
+<td>0.85</td>
+<td>0.5</td>
+<td>0.95</td>
+<td>Normalized r boundary at epidermis</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.safety_margin</code></td>
+<td>float</td>
+<td>0.0001</td>
+<td>0</td>
+<td>0.001</td>
+<td>Safety gap between bundle tube edge and peel inner surface</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.taper_frac</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>0</td>
+<td>0.3</td>
+<td>Length fraction near each tip where bundle density feathers</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.taper_min_ratio</code></td>
+<td>float</td>
+<td>0.45</td>
+<td>0</td>
+<td>1</td>
+<td>Minimum tube-radius ratio in the taper zone</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.tube_r_inner</code></td>
+<td>float</td>
+<td>0.00045</td>
+<td>0.0001</td>
+<td>0.002</td>
+<td>Absolute tube radius at the innermost layer</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.bundles.tube_r_outer</code></td>
+<td>float</td>
+<td>0.00015</td>
+<td>5e-05</td>
+<td>0.001</td>
+<td>Absolute tube radius at the outermost layer (near epidermis)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.density</code></td>
+<td>int</td>
+<td>0</td>
+<td>0</td>
+<td>60</td>
+<td>Number of innermost fibers (the white strings). 0 = auto, scaling with Quality. ⚠ Requires Regene…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.n_tube_seg</code></td>
+<td>int</td>
+<td>10</td>
+<td>6</td>
+<td>20</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.r_inner</code></td>
+<td>float</td>
+<td>0.2</td>
+<td>0.05</td>
+<td>0.4</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.r_outer</code></td>
+<td>float</td>
+<td>0.33</td>
+<td>0.2</td>
+<td>0.5</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.radius_scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0.5</td>
+<td>3</td>
+<td>Scale inner fiber tube radii</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.taper_frac</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>0</td>
+<td>0.3</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.tube_r_inner</code></td>
+<td>float</td>
+<td>0.00045</td>
+<td>0.0001</td>
+<td>0.002</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.fibers.tube_r_outer</code></td>
+<td>float</td>
+<td>0.00038</td>
+<td>0.0001</td>
+<td>0.002</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.band_half_width</code></td>
+<td>float</td>
+<td>0.000867</td>
+<td>0.0001</td>
+<td>0.002</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.band_width_scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0.5</td>
+<td>2</td>
+<td>Scale the width of the 6 honey bezier bands</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.dot_offset</code></td>
+<td>float</td>
+<td>0.00024</td>
+<td>0</td>
+<td>0.0005</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.halo_max_r</code></td>
+<td>float</td>
+<td>0.011</td>
+<td>0.005</td>
+<td>0.02</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.halo_min_r</code></td>
+<td>float</td>
+<td>0.0066</td>
+<td>0.003</td>
+<td>0.015</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.head_hw</code></td>
+<td>float</td>
+<td>0.00042</td>
+<td>0.0001</td>
+<td>0.001</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.r_head</code></td>
+<td>float</td>
+<td>0.0062</td>
+<td>0.003</td>
+<td>0.015</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.r_open</code></td>
+<td>float</td>
+<td>0.0018</td>
+<td>0.0005</td>
+<td>0.005</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.tail_hw</code></td>
+<td>float</td>
+<td>0.0001</td>
+<td>1e-05</td>
+<td>0.0005</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.honey.taper_frac</code></td>
+<td>float</td>
+<td>0.08</td>
+<td>0</td>
+<td>0.3</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.membrane.offset</code></td>
+<td>float</td>
+<td>0.0003</td>
+<td>0</td>
+<td>0.001</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.membrane.thickness</code></td>
+<td>float</td>
+<td>0.0002</td>
+<td>5e-05</td>
+<td>0.001</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.pulp.membrane_gap</code></td>
+<td>float</td>
+<td>5e-05</td>
+<td>0</td>
+<td>0.001</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.pulp.warmth</code></td>
+<td>float</td>
+<td>0.5</td>
+<td>0</td>
+<td>1</td>
+<td>0 = pearl white, 1 = warm cream</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.seeds.axial_end_frac</code></td>
+<td>float</td>
+<td>0.85</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.seeds.axial_start_frac</code></td>
+<td>float</td>
+<td>0.15</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.seeds.darkness</code></td>
+<td>float</td>
+<td>0.8</td>
+<td>0</td>
+<td>1</td>
+<td>0 = light brown, 1 = near black</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.seeds.radius_lat</code></td>
+<td>float</td>
+<td>0.0009</td>
+<td>0.0001</td>
+<td>0.005</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.seeds.radius_lon</code></td>
+<td>float</td>
+<td>0.0015</td>
+<td>0.0001</td>
+<td>0.005</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.seeds.size_scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0.3</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.show_pericarp</code></td>
+<td>bool</td>
+<td>True</td>
+<td>—</td>
+<td>—</td>
+<td>Annular fleshy layer between membrane and peel. Reveals a yellow→cream cross-section gradient and…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.show_stigma</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.stem.base_radius_frac</code></td>
+<td>float</td>
+<td>0.32</td>
+<td>0.1</td>
+<td>0.8</td>
+<td>Base radius as fraction of local banana width</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.stem.bow</code></td>
+<td>float</td>
+<td>0</td>
+<td>-1</td>
+<td>1</td>
+<td>Axial bow along stem length (0 = straight)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.stem.length</code></td>
+<td>float</td>
+<td>0.004</td>
+<td>0.0005</td>
+<td>0.05</td>
+<td>Absolute stigma/stem protrusion (meters)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.stem.n_rings</code></td>
+<td>int</td>
+<td>6</td>
+<td>3</td>
+<td>20</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.stem.taper_ratio</code></td>
+<td>float</td>
+<td>0.72</td>
+<td>0.3</td>
+<td>1</td>
+<td>Tip radius / base radius (truncated cone)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.dot_offset</code></td>
+<td>float</td>
+<td>0.00017</td>
+<td>0</td>
+<td>0.0005</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.head_hw</code></td>
+<td>float</td>
+<td>0.00021</td>
+<td>0.0001</td>
+<td>0.001</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.inner_width_scale</code></td>
+<td>float</td>
+<td>0.55</td>
+<td>0.1</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.r_head</code></td>
+<td>float</td>
+<td>0.0031</td>
+<td>0.001</td>
+<td>0.008</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.r_open</code></td>
+<td>float</td>
+<td>0.0009</td>
+<td>0.0003</td>
+<td>0.003</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.scale</code></td>
+<td>float</td>
+<td>1</td>
+<td>0.5</td>
+<td>1.5</td>
+<td>Scale the 6 ovule teardrop tubes (outer + inner + yellow dots)</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.tail_hw</code></td>
+<td>float</td>
+<td>5e-05</td>
+<td>1e-05</td>
+<td>0.0005</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.taper_frac</code></td>
+<td>float</td>
+<td>0.08</td>
+<td>0</td>
+<td>0.3</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>anatomy.teardrops.yellow_dot_radius</code></td>
+<td>float</td>
+<td>4.5e-05</td>
+<td>1e-05</td>
+<td>0.0002</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="surface-group"><code>surface</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bump Amount</strong></td>
+<td><code>surface.bump_amount</code></td>
+<td>float</td>
+<td>0.3</td>
+<td>0</td>
+<td>1</td>
+<td>Procedural bump height multiplier</td>
+</tr>
+<tr>
+<td><strong>Bump Scale</strong></td>
+<td><code>surface.bump_scale</code></td>
+<td>float</td>
+<td>20</td>
+<td>1</td>
+<td>100</td>
+<td>Noise cell count along length</td>
+</tr>
+<tr>
+<td><strong>Micro Noise</strong></td>
+<td><code>surface.micro_noise_amount</code></td>
+<td>float</td>
+<td>0.1</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Peel Roughness</strong></td>
+<td><code>surface.peel_roughness</code></td>
+<td>float</td>
+<td>0.48</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.bundle_roughness</code></td>
+<td>float</td>
+<td>0.55</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.fiber_roughness</code></td>
+<td>float</td>
+<td>0.75</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.honey_roughness</code></td>
+<td>float</td>
+<td>0.35</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.membrane_roughness</code></td>
+<td>float</td>
+<td>0.45</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.pericarp_roughness</code></td>
+<td>float</td>
+<td>0.55</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.pulp_roughness</code></td>
+<td>float</td>
+<td>0.55</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.seed_roughness</code></td>
+<td>float</td>
+<td>0.85</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.stem_roughness</code></td>
+<td>float</td>
+<td>0.7</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.teardrop_inner_roughness</code></td>
+<td>float</td>
+<td>0.55</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.teardrop_outer_roughness</code></td>
+<td>float</td>
+<td>0.35</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>surface.yellow_dot_roughness</code></td>
+<td>float</td>
+<td>0.35</td>
+<td>0.1</td>
+<td>0.9</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="material-group"><code>material</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Edge snap (px)</strong></td>
+<td><code>material.edge_snap_radius</code></td>
+<td>int</td>
+<td>30</td>
+<td>0</td>
+<td>100</td>
+<td>Pixels searched along the contour normal for the strongest color-gradient (Sobel) edge. 0 disable…</td>
+</tr>
+<tr>
+<td><strong>Skin</strong></td>
+<td><code>material.photo_texture_mapping</code></td>
+<td>enum</td>
+<td><code>STRIP</code></td>
+<td><code>STRIP</code>, <code>FULL</code>, <code>AURORA</code></td>
+<td></td>
+<td>How the fruit surface is skinned.</td>
+</tr>
+<tr>
+<td><strong>Marker count</strong></td>
+<td><code>material.silh_marker_count</code></td>
+<td>int</td>
+<td>48</td>
+<td>12</td>
+<td>100</td>
+<td>Number of silhouette markers initially placed in an ellipse around the photo. Higher = more detai…</td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td><code>material.silh_trace_strategy</code></td>
+<td>enum</td>
+<td><code>GRADIENT_ONLY</code></td>
+<td><code>ARCHETYPE</code>, <code>ARCHETYPE_SNAP</code>, <code>HYBRID</code>, <code>SATURATION</code>, <code>GRADIENT_ONLY</code></td>
+<td></td>
+<td>How Auto-place detects the fruit silhouette in the photo.</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>material.pericarp.ior</code></td>
+<td>float</td>
+<td>1.4</td>
+<td>1</td>
+<td>2.5</td>
+<td>Index of refraction. 1.40 ≈ plant cell wall.</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>material.pericarp.sss_color</code></td>
+<td>float</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>material.pericarp.sss_radius</code></td>
+<td>float</td>
+<td>0.003</td>
+<td>0</td>
+<td>0.01</td>
+<td>Subsurface scattering mean free path (m). 0.003 ≈ 3 mm parenchyma scatter.</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>material.pericarp.translucency</code></td>
+<td>float</td>
+<td>0.3</td>
+<td>0</td>
+<td>1</td>
+<td>Subsurface scattering weight. 0 = no SSS, 1 = pure SSS.</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>material.pericarp.transmission</code></td>
+<td>float</td>
+<td>0.4</td>
+<td>0</td>
+<td>1</td>
+<td>Pericarp translucency via Principled BSDF Transmission Weight. 0 = opaque (bundles hidden), 0.3-0…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>material.photo_texture_mode</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td>Wrap a photo around the banana's peel instead of the procedural color. Upload your selfie, your p…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>material.photo_texture_path</code></td>
+<td>str</td>
+<td>(empty)</td>
+<td>—</td>
+<td>—</td>
+<td>Image path. Picking a file automatically switches Photo Texture Mode on; clearing the field turns…</td>
+</tr>
+</tbody>
+</table>
+<h3 id="animation-group"><code>animation</code> group</h3>
+<table>
+<thead>
+<tr>
+<th>UI Label</th>
+<th>Path</th>
+<th>Type</th>
+<th>Default</th>
+<th>Min / Range</th>
+<th>Max</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Close (frames)</strong></td>
+<td><code>animation.close_duration</code></td>
+<td>int</td>
+<td>20</td>
+<td>5</td>
+<td>120</td>
+<td>Frames the three strips take to close back to 0 together after Strip 3 reaches 50 %. All three hi…</td>
+</tr>
+<tr>
+<td><strong>Peeling Animation</strong></td>
+<td><code>animation.peeling_on</code></td>
+<td>bool</td>
+<td>False</td>
+<td>—</td>
+<td>—</td>
+<td>Insert keyframes on the peel-strip sliders. Enabling auto-turns on Peel Open</td>
+</tr>
+<tr>
+<td><strong>Phase (frames)</strong></td>
+<td><code>animation.phase_duration</code></td>
+<td>int</td>
+<td>20</td>
+<td>5</td>
+<td>120</td>
+<td>Frames required for one strip to reach 50 % open. Each subsequent strip starts peeling when the p…</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>animation.strip1_start</code></td>
+<td>int</td>
+<td>0</td>
+<td>0</td>
+<td>60</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>animation.strip2_start</code></td>
+<td>int</td>
+<td>20</td>
+<td>0</td>
+<td>60</td>
+<td></td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>animation.strip3_start</code></td>
+<td>int</td>
+<td>40</td>
+<td>0</td>
+<td>60</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="license-credits">License &amp; credits</h2>
 <p>GPL-3.0-or-later — © 2026 kaiser390 (kaiser390@naver.com)</p>
-<p>Built on Blender's extensions system (4.2+). Uses numpy only — no
-other runtime dependencies.</p>
+<p>Built on Blender's extensions system (4.2+).</p>
+<p>Bundled ML model: <a href="https://github.com/danielgatis/rembg">u2netp</a> (~4.5 MB).
+Used by the <code>ML Smart</code> auto-trace strategy.</p>
 <p>Feedback, bug reports and preset contributions welcome at the
 project's repository.</p>
 </body>

@@ -9,6 +9,51 @@ Newest first. For the current draft (unreleased work), see
 
 ---
 
+## [1.5.0] — 2026-04-29
+
+Live colour editing + per-banana scope hardening + bundled ML
+auto-trace. Colour sliders now repaint the active banana in
+~30 ms (was ~3 s mesh rebuild) and Random Generation adds bananas
+instead of overwriting. Full detail → [v1.5.0.md](v1.5.0.md).
+
+### Added
+- Live recolour: colour swatches (Outer / Inner / Tip / Membrane /
+  Pulp / Warm) + 🎨 Color Style palette update the active banana
+  instantly via vertex-attribute foreach_set + BSDF default_value.
+- Bundled `u2netp` ML auto-trace (~4.5 MB inside the addon, no
+  external download).
+- Random Generation = "+1 banana": auto-pins existing default
+  before each click so multi-banana scenes build up.
+- `tools/test_regressions.py` — 14 automated MCP-driven regression
+  tests for the colour live + per-banana scope path.
+
+### Changed
+- Selected Banana panel: 3 buttons → 1. Removed `Load to Panel`
+  (msgbus auto-sync covers it) and `Update Snapshot (no rebake)`
+  (rare sculpt workflow). Renamed `Apply Panel` to
+  `Apply Mesh Changes` to reflect colour-live semantics.
+- Color picker rows render unconditionally (no longer gated on
+  the advanced + override_raw toggles).
+- Default ML auto-trace strategy is `REMBG` (u2netp) instead of
+  `GRADIENT_ONLY`.
+
+### Fixed
+- Color slider drag on a pinned banana modified the wrong banana
+  (target_prefix wasn't captured at slider-callback time).
+- Color Style dropdown spawned a new default banana every click;
+  now scoped to the active.
+- Material lookup for PeelInnerMat / MembraneMat / PulpMat now
+  tolerates Blender's `.NNN` auto-suffix (Pin always triggers it).
+- Strip 4-12 amounts dropped from snapshot on 5-strip bananas
+  because the registry only declared strip 1-3.
+- Transform reset on every in-place rebuild — captured + restored
+  in `op_generate_v2`.
+- `_BATCH_LOADING` flag in `randomize_stylized` wasn't in
+  try/finally — a mid-batch raise would have left every property
+  callback silent for the rest of the session.
+
+---
+
 ## [1.4.2] — 2026-04-25
 
 Generation-time optimization round. LOW Realistic Generate
